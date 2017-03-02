@@ -27,3 +27,7 @@
 *.exe
 *.out
 *.app
+
+# Project-specified files
+.scons*
+shiku
