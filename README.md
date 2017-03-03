@@ -9,16 +9,14 @@ I use OS X 10.11.
 `shiku` currently runs well on Windows 7/8/10, Fedora 25, OS X 10.11. 
 
 # Dependencies
-- [nlohmann/json](https://github.com/nlohmann/json)
-- [Libmicrohttpd](https://www.gnu.org/software/libmicrohttpd/)
+- Included in this repo
+    - [nlohmann/json](https://github.com/nlohmann/json)
+    - [cesanta/mongoose](https://github.com/cesanta/mongoose)
+- Not included in this repo
+    - *null*
 
 # Build Instructions
-1. Install `Libmicrohttpd`
-    - macOS / OS X: `brew install libmicrohttpd`
-    - Linux (Fedora): `sudo dnf install libmicrohttpd`
-    - Windows: Manually download binary from [Libmicrohttpd](https://www.gnu.org/software/libmicrohttpd/) and copy it to your MinGW environment.
-    
-2. Run following in terminal (use MinGW on Windows):
+1. Run following in terminal (use MinGW on Windows):
     ```plain
     scons
     ```

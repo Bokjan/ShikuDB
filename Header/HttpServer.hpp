@@ -1,6 +1,6 @@
 #ifndef SHIKU_HTTP_SERVER_HPP_
 #define SHIKU_HTTP_SERVER_HPP_
-#include <microhttpd.h>
+#include "mongoose.h"
 namespace shiku
 {
 	const int DefaultPort = 6207;
@@ -10,8 +10,11 @@ namespace shiku
 		HttpServer(void);
 		HttpServer(int port);
 		~HttpServer(void);
+		void SetPort(int port);
 	private:
-		int Port;
+		char Port[8];
+		mg_mgr mgr;
+		mg_connection *c;
 	};
 }
 #endif //SHIKU_HTTP_SERVER_HPP_

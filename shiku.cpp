@@ -5,8 +5,6 @@
 void Initialize(int argc, char *argv[])
 {
 	shiku::HttpServer hs(6207);
-	int a;
-	std::cin >> a;
 }
 int main(int argc, char *argv[])
 {
@@ -18,4 +16,3 @@ int main(int argc, char *argv[])
 		fun(argc, argv);
 	return 0;
 }
-
