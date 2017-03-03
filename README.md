@@ -19,6 +19,6 @@ I use OS X 10.11.
     - Windows: Manually download binary from [Libmicrohttpd](https://www.gnu.org/software/libmicrohttpd/) and copy it to your MinGW environment.
     
 2. Run following in terminal (use MinGW on Windows):
-```plain
-scons
-```
+    ```plain
+    scons
+    ```
