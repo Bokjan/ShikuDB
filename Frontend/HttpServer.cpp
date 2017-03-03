@@ -2,7 +2,6 @@
 #include <cstring>
 #include <cstdlib>
 #include <stdexcept>
-#include "Json.hpp"
 #include "Literals.hpp"
 #include "HttpServer.hpp"
 namespace shiku
@@ -34,14 +33,14 @@ namespace shiku
 		{
 			case MG_EV_HTTP_REQUEST:
 				http_message *hm = (http_message*)ev_data;
-				if(!strcmp(hm->method.p, "POST"))
+				if(strcmp(hm->method.p, "POST"))
 				{
-					mg_send_head(c, 200, sizeof(HTTPD_INVALID_REQUEST_METHOD), "Content-Type: application/json");
+					mg_send_head(c, 200, SIZEOF(HTTPD_INVALID_REQUEST_METHOD), "Content-Type: application/json");
 					mg_printf(c, "%s", HTTPD_INVALID_REQUEST_METHOD);
 					goto RETURN;
 				}
-				#define PROTOTYPING "{'ok':true,message:'Under construction'}"
-				mg_send_head(c, 200, sizeof(PROTOTYPING), "Content-Type: application/json");
+				#define PROTOTYPING "{\"ok\":true,\"message\":\"Under construction\"}"
+				mg_send_head(c, 200, SIZEOF(PROTOTYPING), "Content-Type: application/json");
 				mg_printf(c, "%s", PROTOTYPING);
 				break;
 		}

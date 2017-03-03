@@ -1,5 +1,6 @@
 #ifndef SHIKU_LITERALS_HPP_
 #define SHIKU_LITERALS_HPP_
+#define SIZEOF(x) (sizeof(x) - 1)
 #ifdef zh_cn
 #include "Lang_zh_cn.hpp"
 #else
