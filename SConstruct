@@ -18,13 +18,14 @@ if Platform == 'Darwin':
 	Env.Replace(CC = 'clang', CXX = 'clang++')
 else:
 	Env.Replace(CC = 'gcc', CXX = 'g++')
-Env.Append(CXXFLAGS = ['-g', '-O2', '-IHeader', '-IThirdParty', '-std=c++14'])
-Env.Append(LINKFLAGS = [])
-if Platform == 'Windows':
-	Env.Append(LINKFLAGS = ['-lws2_32', '-static'])
+Env.Append(CXXFLAGS = ['-O2', '-IHeader', '-IThirdParty', '-std=c++14'])
+Env.Append(LINKFLAGS = ['-static'])
 
 for item in IncludedDirectories:
 	FilesToCompile += IncludeDirectory(item, '*.c')
 	FilesToCompile += IncludeDirectory(item, '*.cpp')
 
-Env.Program(FilesToCompile)
+if Platform == 'Windows':
+	Env.Program(FilesToCompile, LIBS = ['ws2_32'])
+else:
+	Env.Program(FilesToCompile)
