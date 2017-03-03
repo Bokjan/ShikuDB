@@ -3,22 +3,18 @@
 #include <cstdlib>
 #include <stdexcept>
 #include "Json.hpp"
+#include "Literals.hpp"
 #include "HttpServer.hpp"
 namespace shiku
 {
-	nlohmann::json json = {{"ok", false}, {"message", "Invalid request"}};
 	static void EventHandler(mg_connection *c, int ev, void *ev_data);
-	HttpServer::HttpServer(void)
-	{
-		HttpServer(DefaultPort);
-	}
 	HttpServer::HttpServer(int port)
 	{
 		SetPort(port);
 		mg_mgr_init(&mgr, NULL);
 		c = mg_bind(&mgr, Port, EventHandler);
 		if(c == NULL)
-			throw std::runtime_error("Fail to listen on specified port");
+			throw std::runtime_error(HTTPD_PORT_LISTEN_FAILURE);
 		mg_set_protocol_http_websocket(c);
 		for( ; ;)
 			mg_mgr_poll(&mgr, 1000);
@@ -38,10 +34,17 @@ namespace shiku
 		{
 			case MG_EV_HTTP_REQUEST:
 				http_message *hm = (http_message*)ev_data;
-				mg_send_head(c, 200, json.dump().size(), "Content-Type: application/json");
-				mg_printf(c, "%s", json.dump().c_str());
-				printf("%s\n", hm->body.p);
+				if(!strcmp(hm->method.p, "POST"))
+				{
+					mg_send_head(c, 200, sizeof(HTTPD_INVALID_REQUEST_METHOD), "Content-Type: application/json");
+					mg_printf(c, "%s", HTTPD_INVALID_REQUEST_METHOD);
+					goto RETURN;
+				}
+				#define PROTOTYPING "{'ok':true,message:'Under construction'}"
+				mg_send_head(c, 200, sizeof(PROTOTYPING), "Content-Type: application/json");
+				mg_printf(c, "%s", PROTOTYPING);
 				break;
 		}
+	RETURN:;
 	}
 }

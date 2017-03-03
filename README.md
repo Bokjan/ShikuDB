@@ -8,15 +8,21 @@ I use OS X 10.11.
 
 `shiku` currently runs well on Windows 7/8/10, Fedora 25, OS X 10.11. 
 
+# Driver usage
+- Ruby
+	- Run an `irb`
+	- `require_relative` the `Driver/Ruby/shiku.rb`
+	- Use it
+
 # Dependencies
 - Included in this repo
-    - [nlohmann/json](https://github.com/nlohmann/json)
-    - [cesanta/mongoose](https://github.com/cesanta/mongoose)
+	- [nlohmann/json](https://github.com/nlohmann/json)
+	- [cesanta/mongoose](https://github.com/cesanta/mongoose)
 - Not included in this repo
-    - *null*
+	- *null*
 
 # Build Instructions
 1. Run following in terminal (use MinGW on Windows):
-    ```plain
-    scons
-    ```
+	```plain
+	scons
+	```

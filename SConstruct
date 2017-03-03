@@ -9,7 +9,7 @@ if 'NT' in Platform:
 ROOT = './'
 Env = Environment()
 FilesToCompile = ['shiku.cpp']
-IncludedDirectories = ['ThirdParty', 'HttpServer']
+IncludedDirectories = ['ThirdParty', 'Frontend']
 
 def IncludeDirectory(directory, filetype):
 	return Env.Glob(ROOT + directory + '/' + filetype)
@@ -18,7 +18,7 @@ if Platform == 'Darwin':
 	Env.Replace(CC = 'clang', CXX = 'clang++')
 else:
 	Env.Replace(CC = 'gcc', CXX = 'g++')
-Env.Append(CXXFLAGS = ['-O2', '-IHeader', '-IThirdParty', '-std=c++14'])
+Env.Append(CXXFLAGS = ['-g', '-Den_us', '-O2', '-IHeader', '-IThirdParty', '-std=c++14'])
 
 for item in IncludedDirectories:
 	FilesToCompile += IncludeDirectory(item, '*.c')

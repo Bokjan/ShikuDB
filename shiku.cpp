@@ -4,7 +4,7 @@
 #include "HttpServer.hpp"
 void Initialize(int argc, char *argv[])
 {
-	shiku::HttpServer hs(6207);
+	shiku::HttpServer *hs = new shiku::HttpServer(6207);
 }
 int main(int argc, char *argv[])
 {

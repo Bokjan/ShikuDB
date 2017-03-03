@@ -3,11 +3,10 @@
 #include "mongoose.h"
 namespace shiku
 {
-	const int DefaultPort = 6207;
 	class HttpServer
 	{
 	public:
-		HttpServer(void);
+		HttpServer(void) = default;
 		HttpServer(int port);
 		~HttpServer(void);
 		void SetPort(int port);
