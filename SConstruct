@@ -8,8 +8,8 @@ if 'NT' in Platform:
 
 ROOT = './'
 Env = Environment()
-FilesToCompile = ['shiku.cpp', 'ThirdParty/mongoose.c']
-IncludedDirectories = ['ThirdParty', 'Frontend']
+FilesToCompile = ['shikud.cpp', 'Dependency/mongoose.c']
+IncludedDirectories = ['Frontend']
 
 def IncludeDirectory(directory, filetype):
 	return Env.Glob(ROOT + directory + '/' + filetype)
@@ -19,7 +19,7 @@ if Platform == 'Darwin':
 else:
 	Env.Replace(CC = 'gcc', CXX = 'g++')
 Env.Append(CFLAGS = ['-g', '-O2'])
-Env.Append(CXXFLAGS = ['-g', '-O2', '-IHeader', '-IThirdParty', '-std=c++14'])
+Env.Append(CXXFLAGS = ['-g', '-O2', '-IHeader', '-IDependency', '-std=c++14'])
 Env.Append(LINKFLAGS = ['-g', '-O2'])
 
 for item in IncludedDirectories:
