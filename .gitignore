@@ -34,3 +34,4 @@
 # Project-specified files
 .scons*
 shiku
+/Test

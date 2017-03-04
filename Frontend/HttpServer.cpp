@@ -26,14 +26,14 @@ namespace shiku
 	{
 		sprintf(Port, "%d", port);
 	}
-	static void EventHandler(mg_connection *c, int ev, void *ev_data)
+	static void EventHandler(mg_connection *c, int event, void *ev_data)
 	{
 		//See definition of `http_message` at line 4072, mongoose.h
-		switch(ev)
+		switch(event)
 		{
 			case MG_EV_HTTP_REQUEST:
 				http_message *hm = (http_message*)ev_data;
-				if(strcmp(hm->method.p, "POST"))
+				if(hm->method.p[0] != 'P' || hm->method.p[1] != 'O')
 				{
 					mg_send_head(c, 200, SIZEOF(HTTPD_INVALID_REQUEST_METHOD), "Content-Type: application/json");
 					mg_printf(c, "%s", HTTPD_INVALID_REQUEST_METHOD);

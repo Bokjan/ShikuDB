@@ -23,6 +23,6 @@ I use OS X 10.11.
 
 # Build Instructions
 1. Run following in terminal (use MinGW on Windows):
-	```plain
-	scons
-	```
+```plain
+scons
+```
