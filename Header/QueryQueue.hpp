@@ -12,11 +12,13 @@ namespace shiku
 		std::queue<uint64_t> queue;
 	public:
 		QueryQueue(void);
-		inline bool Lock(void);
-		inline bool Unlock(void);
-		inline uint64_t Push(void);
-		inline void Pop(void);
-		inline bool TimeToProcess(uint64_t id);
+		bool Lock(void);
+		bool Unlock(void);
+		uint64_t Push(void);
+		void Pop(void);
+		bool TimeToProcess(uint64_t id);
 	};
+	//Singleton
+	extern QueryQueue queryQueue;
 }
 #endif //SHIKU_QUERY_QUEUE_HPP_

@@ -1,11 +1,12 @@
 #include <cstdio>
-#include <cstring>
-#include <cstdlib>
+#include <string>
 #include <stdexcept>
+#include "ShikuDB.hpp"
 #include "Literals.hpp"
 #include "HttpServer.hpp"
 #include "QueryQueue.hpp"
 using namespace shiku;
+using string = std::string;
 static void EventHandler(mg_connection *c, int ev, void *ev_data);
 HttpServer::HttpServer(int port)
 {
@@ -39,9 +40,22 @@ static void EventHandler(mg_connection *c, int event, void *ev_data)
 				mg_printf(c, "%s", HTTPD_INVALID_REQUEST_METHOD);
 				goto RETURN;
 			}
-			#define PROTOTYPING "{\"ok\":true,\"message\":\"Under construction\"}"
-			mg_send_head(c, 200, SIZEOF(PROTOTYPING), "Content-Type: application/json");
-			mg_printf(c, "%s", PROTOTYPING);
+			/// This part is not thread-safe ///
+			uint64_t requestId = queryQueue.Push();
+			// Block the request until time to process
+			while(!queryQueue.TimeToProcess(requestId));
+			// Lock
+			queryQueue.Lock();
+			// Process
+			// Move semantics:
+			// Call `string`'s constructor with rvalue reference
+			// when receiving an rvalue returns by `ShikuDB`
+			string result = ShikuDB(hm->body.p);
+			mg_send_head(c, 200, result.size(), "Content-Type: application/json");
+			mg_printf(c, "%s", result.c_str());
+			// Pop and Unlock 
+			queryQueue.Pop();
+			queryQueue.Unlock();
 			break;
 	}
 RETURN:;

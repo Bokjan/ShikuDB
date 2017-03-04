@@ -33,5 +33,5 @@
 
 # Project-specified files
 .scons*
-shiku
+shikud
 /Test
