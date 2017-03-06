@@ -2,7 +2,7 @@
 using namespace shiku;
 namespace shiku
 {
-	//Singleton
+	// Singleton
 	QueryQueue queryQueue;
 }
 QueryQueue::QueryQueue(void)

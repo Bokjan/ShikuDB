@@ -29,18 +29,18 @@ void HttpServer::SetPort(int port)
 }
 static void EventHandler(mg_connection *c, int event, void *ev_data)
 {
-	//See definition of `http_message` at line 4072, mongoose.h
+	// See definition of `http_message` at line 4072, mongoose.h
 	switch(event)
 	{
 		case MG_EV_HTTP_REQUEST:
 			http_message *hm = (http_message*)ev_data;
 			if(hm->method.p[0] != 'P' || hm->method.p[1] != 'O')
 			{
-				mg_send_head(c, 200, SIZEOF(HTTPD_INVALID_REQUEST_METHOD), "Content-Type: application/json");
+				mg_send_head(c, 200, _SIZEOF(HTTPD_INVALID_REQUEST_METHOD), "Content-Type: application/json");
 				mg_printf(c, "%s", HTTPD_INVALID_REQUEST_METHOD);
 				goto RETURN;
 			}
-			/// This part is not thread-safe ///
+			/// !!! This part is not thread-safe !!! ///
 			uint64_t requestId = queryQueue.Push();
 			// Block the request until time to process
 			while(!queryQueue.TimeToProcess(requestId));
@@ -51,7 +51,7 @@ static void EventHandler(mg_connection *c, int event, void *ev_data)
 			// Call `string`'s constructor with rvalue reference
 			// when receiving an rvalue returns by `ShikuDB`
 			string result = ShikuDB(hm->body.p);
-			mg_send_head(c, 200, result.size(), "Content-Type: application/json");
+			mg_send_head(c, 200, result.size(), HTTPD_EXTRA_HEADERS);
 			mg_printf(c, "%s", result.c_str());
 			// Pop and Unlock 
 			queryQueue.Pop();

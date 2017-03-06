@@ -4,6 +4,8 @@
 namespace shiku
 {
 	using uint64_t = unsigned long long;
+	// Not thread-safe
+	// No locks when modifying queue
 	class QueryQueue
 	{
 	private:
@@ -18,7 +20,7 @@ namespace shiku
 		void Pop(void);
 		bool TimeToProcess(uint64_t id);
 	};
-	//Singleton
+	// Singleton
 	extern QueryQueue queryQueue;
 }
 #endif //SHIKU_QUERY_QUEUE_HPP_

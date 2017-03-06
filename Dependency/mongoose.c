@@ -4973,7 +4973,7 @@ int mg_normalize_uri_path(const struct mg_str *in, struct mg_str *out) {
 /* Amalgamated: #include "common/sha1.h" */
 /* Amalgamated: #include "common/md5.h" */
 
-static const char *mg_version_header = "Mongoose/" MG_VERSION;
+static const char *mg_version_header = /* "Mongoose/" MG_VERSION */"ShikuDB";
 
 enum mg_http_proto_data_type { DATA_NONE, DATA_FILE, DATA_PUT };
 
