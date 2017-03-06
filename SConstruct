@@ -9,7 +9,7 @@ if 'NT' in Platform:
 ROOT = './'
 Env = Environment()
 FilesToCompile = ['shikud.cpp', 'Dependency/mongoose.c']
-IncludedDirectories = ['Frontend']
+IncludedDirectories = ['Frontend', 'Backend']
 
 def IncludeDirectory(directory, filetype):
 	return Env.Glob(ROOT + directory + '/' + filetype)
@@ -18,6 +18,8 @@ if Platform == 'Darwin':
 	Env.Replace(CC = 'clang', CXX = 'clang++')
 else:
 	Env.Replace(CC = 'gcc', CXX = 'g++')
+if Platform == 'Windows':
+	FilesToCompile = FilesToCompile + ['Dependency/Mmap_Win.c']
 Env.Append(CFLAGS = ['-g', '-O2'])
 Env.Append(CXXFLAGS = ['-g', '-O2', '-IHeader', '-IDependency', '-std=c++14'])
 Env.Append(LINKFLAGS = ['-g', '-O2'])

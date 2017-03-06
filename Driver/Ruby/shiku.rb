@@ -15,6 +15,9 @@ class Shiku
 	end
 	def collection
 		@collection.empty? ? 'nil' : @collection
+	def method_missing(method, *arguments, &block)
+	
+	end
 	private
 	def post(body)
 		Net::HTTP.start(@host, @port) {|http|
