@@ -18,6 +18,7 @@ ShikuDB currently runs well on Windows 7/8/10, Fedora 25, OS X 10.11.
 - Included in this repo
 	- [nlohmann/json](https://github.com/nlohmann/json)
 	- [cesanta/mongoose](https://github.com/cesanta/mongoose)
+	- [witwall/mman-win32](https://github.com/witwall/mman-win32)
 - Not included in this repo
 	- *null*
 

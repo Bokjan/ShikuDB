@@ -19,7 +19,7 @@ if Platform == 'Darwin':
 else:
 	Env.Replace(CC = 'gcc', CXX = 'g++')
 if Platform == 'Windows':
-	FilesToCompile = FilesToCompile + ['Dependency/Mmap_Win.c']
+	FilesToCompile = FilesToCompile + ['Dependency/mman.c']
 Env.Append(CFLAGS = ['-g', '-O2', '-IHeader'])
 Env.Append(CXXFLAGS = ['-g', '-O2', '-IHeader', '-IDependency', '-std=c++14'])
 Env.Append(LINKFLAGS = ['-g', '-O2'])
