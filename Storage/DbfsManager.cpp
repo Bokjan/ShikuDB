@@ -34,10 +34,10 @@ DbfsManager::DbfsManager(const char *_DBName, const char *_RootPath)
 			throw std::runtime_error("Fail to load database data");
 		fd[i] = open(TmpBuff, O_RDWR);
 		// .0 => 32MiB, .1 => 64MiB, ...
-		// (0x1 << 5) == 32, 32MiB == 33554432KiB (33554432 = 32 * 1024 * 1024)
+		// (0x1 << 5) == 32, 32MiB == 33554432 Bytes (33554432 = 32 * 1024 * 1024)
 		// (0x1 << i + 5) << 10 << 10 = 0x1 << i + 25
 		// The 7th file reached 2GiB
-		size_t filesize = i >= 7 ? 0x80000000 /*2GiB*/ : BASE_SIZE << (i + 1);
+		size_t filesize = i >= 7 ? 0x1 << 31 /*2GiB*/ : BASE_SIZE << (i + 1);
 		mem[i] = mmap(NULL, filesize, PROT_READ | PROT_WRITE, MAP_SHARED, fd[i], 0);
 	}
 }
@@ -46,7 +46,7 @@ DbfsManager::~DbfsManager(void)
 	// Sync data to files
 	for(int i = 0; i < *DataFileCount; ++i)
 	{
-		size_t filesize = i >= 7 ? 0x80000000 /*2GiB*/ : BASE_SIZE << (i + 1);
+		size_t filesize = i >= 7 ? 0x1 << 31 /*2GiB*/ : BASE_SIZE << (i + 1);
 		msync(mem[i], filesize, MS_SYNC);
 		close(fd[i]);
 	}
