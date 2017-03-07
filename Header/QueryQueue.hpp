@@ -1,9 +1,9 @@
 #ifndef SHIKU_QUERY_QUEUE_HPP_
 #define SHIKU_QUERY_QUEUE_HPP_
 #include <queue>
+#include <cstdint>
 namespace shiku
 {
-	using uint64_t = unsigned long long;
 	// Not thread-safe
 	// No locks when modifying queue
 	class QueryQueue
