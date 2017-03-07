@@ -3,11 +3,11 @@
 #ifdef _WIN32 // Windows
 #include "mman.h"
 #else // *nix
-#include <fcntl.h>
 #include <unistd.h>
 #include <sys/mman.h>
 #include <sys/types.h>
 #endif // _WIN32
+#include <fcntl.h>
 #include <cstdio>
 #include <cstring>
 #include <stdexcept>

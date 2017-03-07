@@ -7,11 +7,11 @@
 #ifdef _WIN32
 bool shiku::Utility::IsFileExists(const char *file)
 {
-	return _access(file, 0)) != -1;
+	return _access(file, 0) != -1;
 }
 bool shiku::Utility::IsFileWriteable(const char *file)
 {
-	return _access(file, 2)) != -1;
+	return _access(file, 2) != -1;
 }
 #else
 bool shiku::Utility::IsFileExists(const char *file)
