@@ -10,7 +10,7 @@ void Initialize(int argc, char *argv[])
 }
 int main(int argc, char *argv[])
 {
-	// printf("%lu %lu %lu\n", sizeof(shiku::DiskLoc), sizeof(shiku::Metadata), sizeof(shiku::Record));
+	printf("%lu %lu %lu\n", sizeof(shiku::DiskLoc), sizeof(shiku::Metadata), sizeof(shiku::Record));
 	std::function<void(int, char*[])> Delegates[] = 
 	{
 		Initialize

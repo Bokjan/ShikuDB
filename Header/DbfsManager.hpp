@@ -17,39 +17,60 @@ namespace shiku
 	struct DiskLoc // sizeof(DiskLoc) == 8
 	{
 		using byte = char;
-		uint32_t file;
-		uint32_t offset;
+		const static int32_t NullLoc = -1;
+		int32_t file;
+		int32_t offset;
+		DiskLoc(void): 
+			file(NullLoc), offset(NullLoc) { }
 	};
-	struct Metadata // sizeof(Metadata) == 152
+	struct Metadata // sizeof(Metadata) == 160
 	{
 		using byte = char;
 		const static size_t NAME_LENGTH = 128;
 		char Name[NAME_LENGTH];
 		uint64_t Count;
-		uint64_t StorageSize;
+		uint64_t UsedSize;
+		uint64_t TotalSize;
 		DiskLoc FirstRecord;
 	};
 	struct Record // sizeof(Record) == 32
 	{
-		DiskLoc Next, Prev; // Cast to `Record`
-		uint64_t LengthWoHeader; //Wo == Without
+		DiskLoc self, prev, next; // Cast to `Record`
+		uint64_t length; // Length with header
 		// void *Data; // No need to declare a pointer
+		inline uint64_t LengthWoHeader(void)
+		{
+			return length - sizeof(Record);
+		}
+	};
+	// First 4096 bytes of *.meta is reserved
+	namespace META_LAYOUT
+	{
+		const static size_t META_START_AT = 4096;
+		const static size_t DATA_FILE_COUNT_AT = 0; // uint32_t - 4 Bytes
+		const static size_t FREELIST_START_AT = 4; // DiskLoc - 8 Bytes
+		const static size_t LAST_AVAIL_LOC_AT = 12; // DiskLoc - 8 Bytes
 	};
 	class DbfsManager
 	{
 	private:
 		// metadata's offset of fd/mmap array
 		const static int META_OFFSET = -1;
+		const static int MAX_META_SIZE = 100000; // Accurately: 104857.6
 		const static size_t NAME_LENGTH = 128;
 		const static size_t FILE_PER_DB = 32768;
 		const static size_t BASE_SIZE = 16777216; // 16MiB
 		char DBName[NAME_LENGTH];
 		char RootPath[NAME_LENGTH];
 		char TmpBuff[NAME_LENGTH * 8];
-		int *fd, _fd[FILE_PER_DB];
-		void **mem, *_mem[FILE_PER_DB];
-		int *DataFileCount;
-		friend void *GetAddrDlPoints(const DbfsManager &dbfsmgr, const DiskLoc &dl);
+		int *fd, _fd[FILE_PER_DB]; // Array of file descriptors
+		void **mem, *_mem[FILE_PER_DB]; // Array of start of memory addrs
+		int32_t *DataFileCount; // Amount of data files
+		Metadata *metas; // Total metas: 16MiB / 152B ~ 110000
+		DiskLoc *freelist; // First elem of FREELIST
+		DiskLoc *lastAvail; // `MALLOC` at here (if no free node in freelist)
+		friend void *GetAddrFromDl(const DbfsManager &mgr, const DiskLoc &dl);
+		friend void *GetAddrFromDl_Safe(const DbfsManager &mgr, const DiskLoc &dl);
 	public:
 		using byte = char;
 		DbfsManager(void)
@@ -59,10 +80,20 @@ namespace shiku
 		DbfsManager(const char *_DBName, const char *_RootPath);
 		~DbfsManager(void);
 	};
-	inline void *GetAddrDlPoints(const DbfsManager &dbfsmgr, const DiskLoc &dl)
+	inline void *GetAddrFromDl(const DbfsManager &mgr, const DiskLoc &dl)
 	{
 		using byte = char;
-		return (byte*)dbfsmgr.mem[dl.file] + dl.offset;
+		return (byte*)mgr.mem[dl.file] + dl.offset;
 	}
+	inline void *GetAddrFromDl_Safe(const DbfsManager &mgr, const DiskLoc &dl)
+	{
+		using byte = char;
+		if(dl.file == DiskLoc::NullLoc)
+			return nullptr;
+		return (byte*)mgr.mem[dl.file] + dl.offset;
+	}
+	DiskLoc MALLOC(const DbfsManager &mgr, size_t size);
+	void FREE_RECORD(const DbfsManager &mgr, Record &rec);
+	void FREE_RECORD(const DbfsManager &mgr, size_t size);
 }
 #endif // SHIKU_DBFS_MANAGER_HPP_
