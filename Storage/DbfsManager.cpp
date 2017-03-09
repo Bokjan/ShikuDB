@@ -3,6 +3,42 @@
 #include "DbfsManager.hpp"
 namespace shiku
 {
+	static size_t SizeOfDataFile(int index);
+	DbfsManager CreateDatabase(const char *name, const char *root)
+	{
+		const size_t onemb = 0x1 << 20; // 1 MiB
+		char buff[256];
+		char *zero = new char[onemb];
+		memset(zero, sizeof(zero), 0);
+		// Write zeros to meta file
+		sprintf(buff, "%s%s.meta", root, name);
+		FILE *meta = fopen(buff, "wb");
+		if(meta == nullptr)
+			throw std::runtime_error("Fail to write metadata file");
+		for(int i = 0; i < (0x1 << 24) / onemb; ++i)
+			fwrite(zero, onemb, 1, meta);
+		fclose(meta);
+		// Write zeros to data file #0
+		sprintf(buff, "%s%s.0", root, name);
+		FILE *data1 = fopen(buff, "wb");
+		if(data1 == nullptr)
+			throw std::runtime_error("Fail to write data file #0");
+		size_t sizeOfFile = SizeOfDataFile(0);
+		for(int i = 0; i < sizeOfFile / onemb; ++i)
+			fwrite(zero, onemb, 1, data1);
+		fclose(data1);
+		delete [] zero;
+		// Initialize a `DbfsManager`
+		DiskLoc dl;
+		DbfsManager mgr(name, root);
+		// Set `DataFileCount` to correct value (0)
+		*mgr.DataFileCount = 1;
+		// Set `lastAvail` to correct value (nothing to do)
+		// Set `freelist` to NullLoc ({-1, 0})
+		dl.file = DiskLoc::NullLoc;
+		*mgr.freelist = dl;
+		return mgr;
+	}
 	DiskLoc MALLOC(const DbfsManager &mgr, size_t size)
 	{
 		return DiskLoc();
@@ -63,5 +99,24 @@ namespace shiku
 		}
 		msync(mem[META_OFFSET], BASE_SIZE, MS_SYNC);
 		close(fd[META_OFFSET]);
+	}
+	void DbfsManager::CreateNewDatafile(void)
+	{
+		sprintf(TmpBuff, "%s%s.%u", RootPath, DBName, *DataFileCount);
+		FILE *fp = fopen(TmpBuff, "wb");
+		if(fp == nullptr)
+			throw std::runtime_error("Fail to create new data file");
+		const size_t onemb = 0x1 << 20; // 1 MiB
+		size_t sizeOfFile = SizeOfDataFile(*DataFileCount);
+		char *zero = new char[onemb];
+		memset(zero, onemb, 0);
+		for(int i = 0; i < sizeOfFile / onemb; ++i)
+			fwrite(zero, onemb, 1, fp);
+		// mmap it
+		fd[*DataFileCount] = open(TmpBuff, O_RDWR);
+		mem[*DataFileCount] = mmap(NULL, sizeOfFile, PROT_READ | PROT_WRITE, MAP_SHARED, fd[META_OFFSET], 0);
+		// Modify this value at last due to a `-1` offset in operations above
+		*DataFileCount += 1;
+		printf("data file count = %d\n", *DataFileCount);
 	}
 }

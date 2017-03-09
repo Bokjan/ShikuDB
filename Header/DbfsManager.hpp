@@ -71,6 +71,7 @@ namespace shiku
 		DiskLoc *lastAvail; // `MALLOC` at here (if no free node in freelist)
 		friend void *GetAddrFromDl(const DbfsManager &mgr, const DiskLoc &dl);
 		friend void *GetAddrFromDl_Safe(const DbfsManager &mgr, const DiskLoc &dl);
+		friend DbfsManager CreateDatabase(const char *name, const char *root);
 	public:
 		using byte = char;
 		DbfsManager(void)
@@ -79,6 +80,7 @@ namespace shiku
 		}
 		DbfsManager(const char *_DBName, const char *_RootPath);
 		~DbfsManager(void);
+		void CreateNewDatafile(void);
 	};
 	inline void *GetAddrFromDl(const DbfsManager &mgr, const DiskLoc &dl)
 	{
@@ -92,6 +94,7 @@ namespace shiku
 			return nullptr;
 		return (byte*)mgr.mem[dl.file] + dl.offset;
 	}
+	DbfsManager CreateDatabase(const char *name, const char *root);
 	DiskLoc MALLOC(const DbfsManager &mgr, size_t size);
 	void FREE_RECORD(const DbfsManager &mgr, Record &rec);
 	void FREE_RECORD(const DbfsManager &mgr, size_t size);
