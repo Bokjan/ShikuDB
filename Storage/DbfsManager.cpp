@@ -18,21 +18,14 @@ namespace shiku
 		for(int i = 0; i < (0x1 << 24) / onemb; ++i)
 			fwrite(zero, onemb, 1, meta);
 		fclose(meta);
-		// Write zeros to data file #0
-		sprintf(buff, "%s%s.0", root, name);
-		FILE *data1 = fopen(buff, "wb");
-		if(data1 == nullptr)
-			throw std::runtime_error("Fail to write data file #0");
-		size_t sizeOfFile = SizeOfDataFile(0);
-		for(int i = 0; i < sizeOfFile / onemb; ++i)
-			fwrite(zero, onemb, 1, data1);
-		fclose(data1);
 		delete [] zero;
 		// Initialize a `DbfsManager`
 		DiskLoc dl;
 		DbfsManager mgr(name, root);
-		// Set `DataFileCount` to correct value (0)
-		*mgr.DataFileCount = 1;
+		// Set `DataFileCount` to correct value ()
+		*mgr.DataFileCount = 0;
+		// Create the first data file
+		mgr.CreateNewDatafile();
 		// Set `lastAvail` to correct value (nothing to do)
 		// Set `freelist` to NullLoc ({-1, 0})
 		dl.file = DiskLoc::NullLoc;
@@ -53,7 +46,7 @@ namespace shiku
 		// .0 => 32MiB, .1 => 64MiB, ...	
 		// (0x1 << 5) == 32, 32MiB == 33554432 Bytes (33554432 = 32 * 1024 * 1024)
 		// (0x1 << i + 5) << 10 << 10 = 0x1 << i + 25
-		// The 7th file reached 2GiB
+		// The 7th file reaches 2GiB and stops growing
 		return index >= 7 ? 0x1 << 31 /*2GiB*/ : 0x1 << (index + 25);
 	}
 	DbfsManager::DbfsManager(const char *_DBName, const char *_RootPath)
@@ -107,6 +100,7 @@ namespace shiku
 		if(fp == nullptr)
 			throw std::runtime_error("Fail to create new data file");
 		const size_t onemb = 0x1 << 20; // 1 MiB
+		// `DataFileCount` refers to the index of data file here
 		size_t sizeOfFile = SizeOfDataFile(*DataFileCount);
 		char *zero = new char[onemb];
 		memset(zero, onemb, 0);
