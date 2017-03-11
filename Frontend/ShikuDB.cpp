@@ -5,10 +5,6 @@ namespace shiku
 	// Singleton
 	ShikuDB db;
 	extern Json config;
-	ShikuDB::ShikuDB(void)
-	{
-		throw std::runtime_error("Must pass the config file");
-	}
 	string ShikuDB::RunQuery(const char *query)
 	{
 		// We'll parse input string later

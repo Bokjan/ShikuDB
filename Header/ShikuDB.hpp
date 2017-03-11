@@ -14,7 +14,7 @@ namespace shiku
 	{
 	private:
 	public:
-		ShikuDB(void);
+		ShikuDB(void) = default;
 		string RunQuery(const char *query);
 	};
 }
