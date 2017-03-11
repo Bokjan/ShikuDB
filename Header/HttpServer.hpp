@@ -1,6 +1,7 @@
 #ifndef SHIKU_HTTP_SERVER_HPP_
 #define SHIKU_HTTP_SERVER_HPP_
 #include "mongoose.h"
+#include "ShikuDB.hpp"
 namespace shiku
 {
 	class HttpServer

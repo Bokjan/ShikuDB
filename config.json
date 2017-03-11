@@ -1,0 +1,4 @@
+{
+	"root": "/dev/shm/", /* Must be terminated with a `/`*/
+	"port": 6809
+}
