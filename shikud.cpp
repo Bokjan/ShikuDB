@@ -12,22 +12,21 @@
 using Json = nlohmann::json;
 Json config;
 shiku::ShikuDB dbmgr;
+void ParseArgs(int argc, char *argv[]);
 void InitDB(int, char *[]);
 void InitHttpServer(int, char *[]);
 int main(int argc, char *argv[])
 {
-	// printf("%lu %lu %lu\n", sizeof(shiku::DiskLoc), sizeof(shiku::Metadata), sizeof(shiku::Record));
 	std::function<void(int, char*[])> Delegates[] = 
 	{
-		InitDB, InitHttpServer
+		ParseArgs, InitDB, InitHttpServer
 	};
 	for(auto fun : Delegates)
 		fun(argc, argv);
-	// shiku::DbfsManager mgr = shiku::CreateDatabase("test", "./");
-	// mgr.CreateNewDatafile();
+	// shiku::CreateDatabase("test", "/Volumes/RamDisk/t/");
 	return 0;
 }
-void InitDB(int argc, char *argv[])
+void ParseArgs(int argc, char *argv[])
 {
 	for(int i = 0; i < argc; ++i)
 	{
@@ -63,6 +62,14 @@ void InitDB(int argc, char *argv[])
 			}
 		}
 	}
+}
+void InitDB(int argc, char *argv[])
+{
+	// Check if `config.root` exists
+	if(config.find("root") == config.end())
+		throw std::runtime_error("Root path not set");
+	dbmgr.SetRoot(config["root"]);
+	dbmgr.Initialize();
 }
 void InitHttpServer(int argc, char *argv[])
 {
