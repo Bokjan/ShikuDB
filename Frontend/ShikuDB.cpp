@@ -22,11 +22,18 @@ namespace shiku
 		root_dir = opendir(root);
 		while((iterator = readdir(root_dir)) != nullptr)
 		{
-			if(!Utility::IsEndsWith(iterator->d_name, ".db"))
+			// Strange problem.
+			// d_name will have a +4 offset when compiling with MinGW
+			string dbname;
+#ifdef __WIN32
+			dbname = iterator->d_name - 4;
+#else
+			dbname = iterator->d_name;
+#endif
+			if(!Utility::IsEndsWith(dbname.c_str(), ".db"))
 				continue;
 			// Concatatenate this DB's dir path
-			sprintf(tmp, "%s%s/", root, iterator->d_name);
-			string dbname = iterator->d_name;
+			sprintf(tmp, "%s%s/", root, dbname.c_str());
 			dbname = dbname.substr(0, dbname.length() - 3);
 			DBs.insert(std::make_pair(dbname, DbfsManager(dbname.c_str(), tmp)));
 		}
