@@ -11,7 +11,7 @@
 #include "DbfsManager.hpp"
 using Json = nlohmann::json;
 Json config;
-shiku::ShikuDB db;
+shiku::ShikuDB dbmgr;
 void InitDB(int, char *[]);
 void InitHttpServer(int, char *[]);
 int main(int argc, char *argv[])

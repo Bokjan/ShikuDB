@@ -2,9 +2,8 @@
 #include "Literals.hpp"
 namespace shiku
 {
-	// Singleton
-	ShikuDB db;
 	extern Json config;
+	extern ShikuDB dbmgr;
 	string ShikuDB::RunQuery(const char *query)
 	{
 		// We'll parse input string later

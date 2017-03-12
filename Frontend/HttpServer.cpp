@@ -6,7 +6,7 @@
 #include "HttpServer.hpp"
 #include "QueryQueue.hpp"
 using namespace shiku;
-extern shiku::ShikuDB db;
+extern shiku::ShikuDB dbmgr;
 using string = std::string;
 static void EventHandler(mg_connection *c, int ev, void *ev_data);
 HttpServer::HttpServer(int port)
@@ -51,7 +51,7 @@ static void EventHandler(mg_connection *c, int event, void *ev_data)
 			// Move semantics:
 			// Call `string`'s constructor with rvalue reference
 			// when receiving an rvalue returns by `ShikuDB`
-			string result = db.RunQuery(hm->body.p);
+			string result = dbmgr.RunQuery(hm->body.p);
 			mg_send_head(c, 200, result.size(), HTTPD_EXTRA_HEADERS);
 			mg_printf(c, "%s", result.c_str());
 			// Pop and Unlock 
