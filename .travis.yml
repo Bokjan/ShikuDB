@@ -1,2 +1,10 @@
-language: cpp
-script: scons
+language: generic
+before_install:
+    - sudo apt-get update -qq
+install:
+    - sudo apt-get install -qq g++-4.8
+    - alias gcc=gcc-4.8
+    - alias g++=g++-4.8
+script:
+    - time scons
+    - scons -c

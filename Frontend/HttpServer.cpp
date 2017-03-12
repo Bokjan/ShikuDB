@@ -15,7 +15,6 @@ namespace shiku
 {
 	using string = std::string;
 	bool shutdown = false;
-	bool shutdown_instruction = false;
 	static void EventHandler(mg_connection *c, int ev, void *ev_data);
 	HttpServer::HttpServer(int port)
 	{
@@ -38,7 +37,7 @@ namespace shiku
 	{
 		do
 			mg_mgr_poll(&mgr, 1000);
-		while(!shutdown_instruction);
+		while(!shutdown);
 		// Wait operations to finish for 1 second
 #ifndef __WIN32
 		sleep(1); // `sleep` in `unistd.h` takes param as second
@@ -77,7 +76,7 @@ namespace shiku
 				queryQueue.Unlock();
 				// Send shutdown instruction if last operation is `shutdown`
 				if(shutdown)
-					shutdown_instruction = true;
+					shutdown = true;
 				break;
 		}
 	RETURN:;
