@@ -62,17 +62,8 @@ namespace shiku
 				output[SHIKUDB_JSON_FIELD_MESSAGE] = SHIKUDB_ERROR_MESSAGE_OPERATION_NOT_PROVIDED;
 				break;
 			}
-			// ShutdownServer
-			if(input["operation"] == "shutdown")
-			{
-				extern bool shutdown;
-				shutdown = true;
-				output["ok"] = true;
-				break;
-			}
 		}
 		while(false);
-
 		// Local variable becomes rvalue when returning
 		return output.dump();
 	}

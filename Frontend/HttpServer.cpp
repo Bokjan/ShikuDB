@@ -5,16 +5,11 @@
 #include "Literals.hpp"
 #include "HttpServer.hpp"
 #include "QueryQueue.hpp"
-#ifndef __WIN32
-#include <unistd.h>
-#else
-#include <windows.h>
-#endif
+using namespace shiku;
 extern shiku::ShikuDB dbmgr;
 namespace shiku
 {
 	using string = std::string;
-	bool shutdown = false;
 	static void EventHandler(mg_connection *c, int ev, void *ev_data);
 	HttpServer::HttpServer(int port)
 	{
@@ -29,21 +24,14 @@ namespace shiku
 	{
 		mg_mgr_free(&mgr);
 	}
+	void HttpServer::Run(void)
+	{
+		for( ; ;)
+			mg_mgr_poll(&mgr, 1000);
+	}
 	void HttpServer::SetPort(int port)
 	{
 		sprintf(Port, "%d", port);
-	}
-	void HttpServer::Run(void)
-	{
-		do
-			mg_mgr_poll(&mgr, 1000);
-		while(!shutdown);
-		// Wait operations to finish for 1 second
-#ifndef __WIN32
-		sleep(1); // `sleep` in `unistd.h` takes param as second
-#else
-		Sleep(1000); // `Sleep` in `windows.h` takes param as millisecond
-#endif
 	}
 	static void EventHandler(mg_connection *c, int event, void *ev_data)
 	{
@@ -74,9 +62,6 @@ namespace shiku
 				// Pop and Unlock 
 				queryQueue.Pop();
 				queryQueue.Unlock();
-				// Send shutdown instruction if last operation is `shutdown`
-				if(shutdown)
-					shutdown = true;
 				break;
 		}
 	RETURN:;
