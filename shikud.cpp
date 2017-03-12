@@ -66,8 +66,10 @@ void InitDB(int argc, char *argv[])
 }
 void InitHttpServer(int argc, char *argv[])
 {
+	shiku::HttpServer *hs;
 	if(config.find("port") != config.end())
-		shiku::HttpServer *hs = new shiku::HttpServer((int)config["port"]);
+		hs = new shiku::HttpServer((int)config["port"]);
 	else
-		shiku::HttpServer *hs = new shiku::HttpServer(6207);
+		hs = new shiku::HttpServer(6207);
+	hs->Run();
 }

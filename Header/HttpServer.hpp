@@ -11,6 +11,7 @@ namespace shiku
 		HttpServer(int port);
 		~HttpServer(void);
 		void SetPort(int port);
+		void Run(void);
 	private:
 		char Port[8];
 		mg_mgr mgr;

@@ -6,7 +6,6 @@ namespace shiku
 	extern ShikuDB dbmgr;
 	string ShikuDB::RunQuery(const char *query)
 	{
-		// We'll parse input string later
 		Json input;
 		Json output = 
 		{
@@ -24,8 +23,29 @@ namespace shiku
 				output[SHIKUDB_JSON_FIELD_MESSAGE] = SHIKUDB_ERROR_MESSAGE_INVALID_JSON_STRING;
 				break;
 			}
+			/*
+				input:
+				{
+					"operation" : "a_string"
+				}
+			*/
+			// Check if field `operation` exists, true => not found
+			if(input.find("operation") == input.end())
+			{
+				output[SHIKUDB_JSON_FIELD_MESSAGE] = SHIKUDB_ERROR_MESSAGE_OPERATION_NOT_PROVIDED;
+				break;
+			}
+			// ShutdownServer
+			if(input["operation"] == "shutdown")
+			{
+				extern bool shutdown;
+				shutdown = true;
+				output["ok"] = true;
+				break;
+			}
 		}
 		while(false);
+
 		// Local variable becomes rvalue when returning
 		return output.dump();
 	}
