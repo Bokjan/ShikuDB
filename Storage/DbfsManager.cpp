@@ -3,7 +3,7 @@
 #include "DbfsManager.hpp"
 namespace shiku
 {
-	static size_t SizeOfDataFile(int index);
+	size_t SizeOfDatafile(int index);
 	DbfsManager CreateDatabase(const char *name, const char *root)
 	{
 		const size_t onemb = 0x1 << 20; // 1 MiB
@@ -18,7 +18,7 @@ namespace shiku
 		for(int i = 0; i < (0x1 << 24) / onemb; ++i)
 			fwrite(zero, onemb, 1, meta);
 		fclose(meta);
-		delete [] zero;
+		delete[] zero;
 		// Initialize a `DbfsManager`
 		DiskLoc dl;
 		DbfsManager mgr(name, root);
@@ -31,23 +31,6 @@ namespace shiku
 		dl.file = DiskLoc::NullLoc;
 		*mgr.freelist = dl;
 		return mgr;
-	}
-	DiskLoc MALLOC(const DbfsManager &mgr, size_t size)
-	{
-		return DiskLoc();
-
-	}
-	void FREE_RECORD(const DbfsManager &mgr, Record &rec)
-	{
-
-	}
-	static size_t SizeOfDataFile(int index)
-	{
-		// .0 => 32MiB, .1 => 64MiB, ...	
-		// (0x1 << 5) == 32, 32MiB == 33554432 Bytes (33554432 = 32 * 1024 * 1024)
-		// (0x1 << i + 5) << 10 << 10 = 0x1 << i + 25
-		// The 7th file reaches 2GiB and stops growing
-		return index >= 7 ? 0x1 << 31 /*2GiB*/ : 0x1 << (index + 25);
 	}
 	DbfsManager::DbfsManager(const char *_DBName, const char *_RootPath)
 	{
@@ -71,7 +54,7 @@ namespace shiku
 			if(!Utility::IsFileWriteable(TmpBuff))
 				throw std::runtime_error("Fail to load database data");
 			fd[i] = open(TmpBuff, O_RDWR);
-			size_t filesize = SizeOfDataFile(i);
+			size_t filesize = SizeOfDatafile(i);
 			mem[i] = mmap(NULL, filesize, PROT_READ | PROT_WRITE, MAP_SHARED, fd[i], 0);
 		}
 		// Initialize metas' array (pointer)
@@ -86,7 +69,7 @@ namespace shiku
 		// Sync data to files
 		for(int i = 0; i < *DataFileCount; ++i)
 		{
-			size_t filesize = SizeOfDataFile(i);
+			size_t filesize = SizeOfDatafile(i);
 			msync(mem[i], filesize, MS_SYNC);
 			close(fd[i]);
 		}
@@ -101,7 +84,7 @@ namespace shiku
 			throw std::runtime_error("Fail to create new data file");
 		const size_t onemb = 0x1 << 20; // 1 MiB
 		// `DataFileCount` refers to the index of data file here
-		size_t sizeOfFile = SizeOfDataFile(*DataFileCount);
+		size_t sizeOfFile = SizeOfDatafile(*DataFileCount);
 		char *zero = new char[onemb];
 		memset(zero, onemb, 0);
 		for(int i = 0; i < sizeOfFile / onemb; ++i)
@@ -111,6 +94,6 @@ namespace shiku
 		mem[*DataFileCount] = mmap(NULL, sizeOfFile, PROT_READ | PROT_WRITE, MAP_SHARED, fd[META_OFFSET], 0);
 		// Modify this value at last due to a `-1` offset in operations above
 		*DataFileCount += 1;
-		printf("data file count = %d\n", *DataFileCount);
+		delete[] zero;
 	}
 }

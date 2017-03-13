@@ -63,16 +63,13 @@ namespace shiku
 		char DBName[NAME_LENGTH];
 		char RootPath[NAME_LENGTH];
 		char TmpBuff[NAME_LENGTH * 8];
+	public:
 		int *fd, _fd[FILE_PER_DB]; // Array of file descriptors
 		void **mem, *_mem[FILE_PER_DB]; // Array of start of memory addrs
 		int32_t *DataFileCount; // Amount of data files
 		Metadata *metas; // Total metas: 16MiB / 152B ~ 110000
 		DiskLoc *freelist; // First elem of FREELIST
 		DiskLoc *lastAvail; // `MALLOC` at here (if no free node in freelist)
-		friend void *GetAddrFromDl(const DbfsManager &mgr, const DiskLoc &dl);
-		friend void *GetAddrFromDl_Safe(const DbfsManager &mgr, const DiskLoc &dl);
-		friend DbfsManager CreateDatabase(const char *name, const char *root);
-	public:
 		using byte = char;
 		DbfsManager(void)
 		{
@@ -94,9 +91,12 @@ namespace shiku
 			return nullptr;
 		return (byte*)mgr.mem[dl.file] + dl.offset;
 	}
+	size_t SizeOfDatafile(int index);
 	DbfsManager CreateDatabase(const char *name, const char *root);
-	DiskLoc MALLOC(const DbfsManager &mgr, size_t size);
-	void FREE_RECORD(const DbfsManager &mgr, Record &rec);
-	void FREE_RECORD(const DbfsManager &mgr, size_t size);
+	namespace Allocator
+	{
+		DiskLoc MALLOC(DbfsManager &mgr, size_t size);
+		void FREE(const DbfsManager &mgr, Record &rec);
+	}
 }
 #endif // SHIKU_DBFS_MANAGER_HPP_
