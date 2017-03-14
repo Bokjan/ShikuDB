@@ -1,4 +1,6 @@
 # What is ShikuDB
+Build Status: [![Build Status](https://travis-ci.org/Bokjan/ShikuDB.svg?branch=master)](https://travis-ci.org/Bokjan/ShikuDB) (Travis-CI)
+
 ShikuDB is a naive NoSQL database designed for finishing my C++ course.
 
 `shiku` can either be pronouced as シク(詩句, poem) or xīkù(奚库, big-belly database).

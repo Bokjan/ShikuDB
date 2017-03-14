@@ -1,4 +1,5 @@
 #include <ctime>
+#include <cstdarg>
 #include <stdexcept>
 #include "Utility.hpp"
 namespace shiku
