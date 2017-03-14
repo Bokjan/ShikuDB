@@ -32,6 +32,7 @@ namespace shiku
 #endif
 			if(!Utility::IsEndsWith(dbname.c_str(), ".db"))
 				continue;
+			Log.Debug("Loading database %s", dbname.c_str());
 			// Concatatenate this DB's dir path
 			sprintf(tmp, "%s%s/", root, dbname.c_str());
 			dbname = dbname.substr(0, dbname.length() - 3);

@@ -6,6 +6,7 @@ namespace shiku
 	size_t SizeOfDatafile(int index);
 	DbfsManager CreateDatabase(const char *name, const char *root)
 	{
+		Log.Info("Creating database %s", name);
 		const size_t onemb = 0x1 << 20; // 1 MiB
 		char buff[256];
 		char *zero = new char[onemb];
@@ -14,11 +15,15 @@ namespace shiku
 		sprintf(buff, "%s%s.meta", root, name);
 		FILE *meta = fopen(buff, "wb");
 		if(meta == nullptr)
+		{
+			Log.Fatal("Fail to write %s", buff);
 			throw std::runtime_error("Fail to write metadata file");
+		}
 		for(int i = 0; i < (0x1 << 24) / onemb; ++i)
 			fwrite(zero, onemb, 1, meta);
 		fclose(meta);
 		delete[] zero;
+		Log.Info("New file %s created, size: %u", buff, 0x1 << 24);
 		// Initialize a `DbfsManager`
 		DiskLoc dl;
 		DbfsManager mgr(name, root);
@@ -39,7 +44,10 @@ namespace shiku
 		// Test if metadata exists
 		sprintf(TmpBuff, "%s%s.meta", RootPath, DBName);
 		if(!Utility::IsFileWriteable(TmpBuff))
+		{
+			Log.Fatal("Fail to load %s", TmpBuff);
 			throw std::runtime_error("Fail to load database metadata");
+		}
 		// Initialize fd/mmap array
 		fd = _fd - (META_OFFSET * 8); // META_OFFSET is a negative nubmer
 		mem = _mem - (META_OFFSET * 8);
@@ -52,7 +60,10 @@ namespace shiku
 		{
 			sprintf(TmpBuff, "%s%s.%d", RootPath, DBName, i);
 			if(!Utility::IsFileWriteable(TmpBuff))
+			{
+				Log.Fatal("Fail to load %s", TmpBuff);
 				throw std::runtime_error("Fail to load database data");
+			}
 			fd[i] = open(TmpBuff, O_RDWR);
 			size_t filesize = SizeOfDatafile(i);
 			mem[i] = mmap(NULL, filesize, PROT_READ | PROT_WRITE, MAP_SHARED, fd[i], 0);
@@ -81,7 +92,11 @@ namespace shiku
 		sprintf(TmpBuff, "%s%s.%u", RootPath, DBName, *DataFileCount);
 		FILE *fp = fopen(TmpBuff, "wb");
 		if(fp == nullptr)
+		{
+			Log.Fatal("Fail to create %s", TmpBuff);
 			throw std::runtime_error("Fail to create new data file");
+		}
+		Log.Info("Creating new data file %s", TmpBuff);
 		const size_t onemb = 0x1 << 20; // 1 MiB
 		// `DataFileCount` refers to the index of data file here
 		size_t sizeOfFile = SizeOfDatafile(*DataFileCount);
@@ -95,5 +110,6 @@ namespace shiku
 		// Modify this value at last due to a `-1` offset in operations above
 		*DataFileCount += 1;
 		delete[] zero;
+		Log.Info("New data file %s created, size: %lu", TmpBuff, sizeOfFile);
 	}
 }

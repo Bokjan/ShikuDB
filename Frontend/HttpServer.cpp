@@ -2,6 +2,7 @@
 #include <string>
 #include <stdexcept>
 #include "ShikuDB.hpp"
+#include "Utility.hpp"
 #include "Literals.hpp"
 #include "HttpServer.hpp"
 #include "QueryQueue.hpp"
@@ -17,12 +18,17 @@ namespace shiku
 		mg_mgr_init(&mgr, NULL);
 		c = mg_bind(&mgr, Port, EventHandler);
 		if(c == NULL)
+		{
+			Log.Fatal("Fail to listen on port %d", port);
 			throw std::runtime_error(HTTPD_PORT_LISTEN_FAILURE);
+		}
 		mg_set_protocol_http_websocket(c);
+		Log.Info("Listening on port %d", port);
 	}
 	HttpServer::~HttpServer(void)
 	{
 		mg_mgr_free(&mgr);
+		Log.Info("Http Server stopped");
 	}
 	void HttpServer::Run(void)
 	{

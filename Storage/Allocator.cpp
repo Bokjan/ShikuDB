@@ -24,7 +24,7 @@ namespace shiku
 				Record *rec = (Record*)mgr.lastAvail;
 				rec->length = SizeOfDatafile(mgr.lastAvail->file) - mgr.lastAvail->offset - sizeof(Record);
 				// Free the unused part
-				FREE(mgr, *rec);
+				Allocator::FREE(mgr, *rec);
 			}
 			// Create a new file
 			mgr.CreateNewDatafile();
