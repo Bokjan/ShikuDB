@@ -10,7 +10,7 @@ namespace shiku
 		const size_t onemb = 0x1 << 20; // 1 MiB
 		char buff[256];
 		char *zero = new char[onemb];
-		memset(zero, sizeof(zero), 0);
+		memset(zero, 0, onemb);
 		// Write zeros to meta file
 		sprintf(buff, "%s%s.meta", root, name);
 		FILE *meta = fopen(buff, "wb");
@@ -101,7 +101,7 @@ namespace shiku
 		// `DataFileCount` refers to the index of data file here
 		size_t sizeOfFile = SizeOfDatafile(*DataFileCount);
 		char *zero = new char[onemb];
-		memset(zero, onemb, 0);
+		memset(zero, 0, onemb);
 		for(int i = 0; i < sizeOfFile / onemb; ++i)
 			fwrite(zero, onemb, 1, fp);
 		// mmap it

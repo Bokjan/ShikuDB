@@ -53,7 +53,7 @@ namespace shiku
 		if(level < Level::Info)
 			return;
 		PrintTime();
-		fprintf(fp, " [Info] ");
+		fprintf(fp, " [Info]  ");
 		va_list ap;
 		va_start(ap, fmt);
 		vfprintf(fp, fmt, ap);
@@ -66,7 +66,7 @@ namespace shiku
 		if(level < Level::Warn)
 			return;
 		PrintTime();
-		fprintf(fp, " [Warn] ");
+		fprintf(fp, " [Warn]  ");
 		va_list ap;
 		va_start(ap, fmt);
 		vfprintf(fp, fmt, ap);
