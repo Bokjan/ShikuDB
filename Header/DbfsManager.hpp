@@ -7,11 +7,15 @@
 #include <sys/mman.h>
 #include <sys/types.h>
 #endif // _WIN32
-#include <fcntl.h>
+#include <map>
 #include <cstdio>
+#include <string>
+#include <fcntl.h>
+#include <utility>
 #include <cstring>
 #include <cstdint>
 #include <stdexcept>
+using string = std::string;
 namespace shiku
 {
 	struct DiskLoc // sizeof(DiskLoc) == 8
@@ -50,6 +54,7 @@ namespace shiku
 		const static size_t DATA_FILE_COUNT_AT = 0; // uint32_t - 4 Bytes
 		const static size_t FREELIST_START_AT = 4; // DiskLoc - 8 Bytes
 		const static size_t LAST_AVAIL_LOC_AT = 12; // DiskLoc - 8 Bytes
+		const static size_t METADATA_COUNT_AT = 20; // uint32_t - 4 Bytes
 	};
 	class DbfsManager
 	{
@@ -70,6 +75,8 @@ namespace shiku
 		Metadata *metas; // Total metas: 16MiB / 152B ~ 110000
 		DiskLoc *freelist; // First elem of FREELIST
 		DiskLoc *lastAvail; // `MALLOC` at here (if no free node in freelist)
+		int32_t *MetadataCount; // Num of metadatas
+		std::map<string, Metadata*> Metamap; // Metadata map
 		using byte = char;
 		DbfsManager(void)
 		{

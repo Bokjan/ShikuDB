@@ -70,6 +70,10 @@ namespace shiku
 		}
 		// Initialize metas' array (pointer)
 		metas = (Metadata*)((byte*)mem[META_OFFSET] + META_LAYOUT::META_START_AT);
+		// Initialize meta map
+		MetadataCount = (int32_t*)((byte*)mem[META_OFFSET] + META_LAYOUT::METADATA_COUNT_AT);
+		for(int i = 0; i < *MetadataCount; ++i)
+			Metamap.insert(std::make_pair(metas[i].Name, &metas[i]));
 		// Initialize the freelist
 		// and the last available `DiskLoc` position
 		freelist = (DiskLoc*)((byte*)mem[META_OFFSET] + META_LAYOUT::FREELIST_START_AT);
