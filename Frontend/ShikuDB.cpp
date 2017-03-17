@@ -76,9 +76,17 @@ namespace shiku
 			
 		}
 		while(false);
-		const string op = input["operation"];
-		std::function<void(Json&, Json&)> handler = GetApiFuncByString(op.c_str());
-		handler(input, output);
+		try
+		{
+			const string op = input["operation"];
+			std::function<void(Json&, Json&)> handler = GetApiFuncByString(op.c_str());
+			handler(input, output);
+		}
+		catch(std::domain_error derr)
+		{
+			Log.Warn("Invalid type on `operation` received");
+			output[SHIKUDB_JSON_FIELD_MESSAGE] = SHIKUDB_ERROR_MESSAGE_INVALID_TYPE;
+		}
 		// Local variable becomes rvalue when returning
 		return output.dump();
 	}

@@ -6,5 +6,7 @@
 
 #define SHIKUDB_ERROR_MESSAGE_INVALID_JSON_STRING "Invalid JSON string"
 #define SHIKUDB_ERROR_MESSAGE_OPERATION_NOT_PROVIDED "Operation not provided"
+#define SHIKUDB_ERROR_MESSAGE_INVALID_TYPE "Invalid type of query JSON"
+#define SHIKUDB_ERROR_MESSAGE_INVALID_OPERATION "Invalid operation string received"
 
 #endif //SHIKU_LANG_EN_US_HPP_
