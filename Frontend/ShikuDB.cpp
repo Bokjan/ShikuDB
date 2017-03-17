@@ -1,10 +1,13 @@
 #include <cstdio>
+#include <string>
 #include <unistd.h>
 #include <dirent.h>
 #include <sys/types.h>
 #include "ShikuDB.hpp"
 #include "Utility.hpp"
 #include "Literals.hpp"
+#include "ClientAPI.hpp"
+using std::string;
 namespace shiku
 {
 	extern Json config;
@@ -70,8 +73,12 @@ namespace shiku
 				output[SHIKUDB_JSON_FIELD_MESSAGE] = SHIKUDB_ERROR_MESSAGE_OPERATION_NOT_PROVIDED;
 				break;
 			}
+			
 		}
 		while(false);
+		const string op = input["operation"];
+		std::function<void(Json&, Json&)> handler = GetApiFuncByString(op.c_str());
+		handler(input, output);
 		// Local variable becomes rvalue when returning
 		return output.dump();
 	}

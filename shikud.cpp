@@ -10,6 +10,7 @@
 #include "HttpServer.hpp"
 #include "DbfsManager.hpp"
 using Json = nlohmann::json;
+using shiku::Log;
 Json config;
 shiku::ShikuDB dbmgr;
 void ParseArgs(int argc, char *argv[]);
@@ -17,13 +18,14 @@ void InitDB(int, char *[]);
 void InitHttpServer(int, char *[]);
 int main(int argc, char *argv[])
 {
-	shiku::Log.SetLevel(shiku::LogClass::Level::All);
+	Log.SetLevel(shiku::LogClass::Level::All);
 	std::function<void(int, char*[])> Delegates[] = 
 	{
 		ParseArgs, InitDB, InitHttpServer
 	};
 	for(auto fun : Delegates)
 		fun(argc, argv);
+	Log.Info("Shutting down server");
 	return 0;
 }
 void ParseArgs(int argc, char *argv[])
@@ -41,7 +43,7 @@ void ParseArgs(int argc, char *argv[])
 			{
 				if(!shiku::Utility::IsFileExists(argv[++i]))
 				{
-					shiku::Log.Fatal("Cannot open config file");
+					Log.Fatal("Cannot open config file");
 					throw std::runtime_error("Cannot open config file");
 				}
 				std::ifstream in(argv[i]);
@@ -52,7 +54,7 @@ void ParseArgs(int argc, char *argv[])
 				}
 				catch(std::invalid_argument e)
 				{
-					shiku::Log.Warn("Configuration JSON parse failed");
+					Log.Warn("Configuration JSON parse failed");
 					// throw std::runtime_error("Configuration parse failed");
 				}
 				break;
@@ -72,7 +74,7 @@ void InitDB(int argc, char *argv[])
 	// Check if `config.root` exists
 	if(config.find("root") == config.end())
 	{
-		shiku::Log.Fatal("Root path not set");
+		Log.Fatal("Root path not set");
 		throw std::runtime_error("Root path not set");
 	}
 	dbmgr.SetRoot(config["root"]);

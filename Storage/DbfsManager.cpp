@@ -19,7 +19,7 @@ namespace shiku
 			Log.Fatal("Fail to write %s", buff);
 			throw std::runtime_error("Fail to write metadata file");
 		}
-		for(int i = 0; i < (0x1 << 24) / onemb; ++i)
+		for(int i = 0; i < (int)(0x1 << 24) / onemb; ++i)
 			fwrite(zero, onemb, 1, meta);
 		fclose(meta);
 		delete[] zero;
@@ -106,7 +106,7 @@ namespace shiku
 		size_t sizeOfFile = SizeOfDatafile(*DataFileCount);
 		char *zero = new char[onemb];
 		memset(zero, 0, onemb);
-		for(int i = 0; i < sizeOfFile / onemb; ++i)
+		for(int i = 0; i < (int)(sizeOfFile / onemb); ++i)
 			fwrite(zero, onemb, 1, fp);
 		// mmap it
 		fd[*DataFileCount] = open(TmpBuff, O_RDWR);

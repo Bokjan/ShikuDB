@@ -15,10 +15,9 @@ namespace shiku
 	// A singleton class
 	class ShikuDB
 	{
-	private:
+	public:
 		char root[1024]; // root path
 		std::map<string, DbfsManager> DBs;
-	public:
 		ShikuDB(void) = default;
 		void Initialize(void);
 		void SetRoot(string r);

@@ -19,7 +19,7 @@ namespace shiku
 	{
 		time_t t = time(nullptr);
 		tm *u = localtime(&t);
-		fprintf(fp, "%04d/%02d/%02d %02d:%02d:%02d -", 
+		fprintf(fp, "%04d/%02d/%02d %02d:%02d:%02d", 
 			1900 + u->tm_year, 1 + u->tm_mon, u->tm_mday, 
 			u->tm_hour, u->tm_min, u->tm_sec);
 	}
@@ -40,7 +40,7 @@ namespace shiku
 		if(level < Level::Debug)
 			return;
 		PrintTime();
-		fprintf(fp, " [Debug] ");
+		fprintf(fp, " [Debug] - ");
 		va_list ap;
 		va_start(ap, fmt);
 		vfprintf(fp, fmt, ap);
@@ -53,7 +53,7 @@ namespace shiku
 		if(level < Level::Info)
 			return;
 		PrintTime();
-		fprintf(fp, " [Info]  ");
+		fprintf(fp, " [Info]  - ");
 		va_list ap;
 		va_start(ap, fmt);
 		vfprintf(fp, fmt, ap);
@@ -66,7 +66,7 @@ namespace shiku
 		if(level < Level::Warn)
 			return;
 		PrintTime();
-		fprintf(fp, " [Warn]  ");
+		fprintf(fp, " [Warn]  - ");
 		va_list ap;
 		va_start(ap, fmt);
 		vfprintf(fp, fmt, ap);
@@ -79,7 +79,7 @@ namespace shiku
 		if(level < Level::Fatal)
 			return;
 		PrintTime();
-		fprintf(fp, " [Fatal] ");
+		fprintf(fp, " [Fatal] - ");
 		va_list ap;
 		va_start(ap, fmt);
 		vfprintf(fp, fmt, ap);
