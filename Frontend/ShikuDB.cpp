@@ -85,6 +85,7 @@ namespace shiku
 		catch(std::domain_error derr)
 		{
 			Log.Warn("Invalid type on `operation` received");
+			Log.Debug("%s", query);
 			output[SHIKUDB_JSON_FIELD_MESSAGE] = SHIKUDB_ERROR_MESSAGE_INVALID_TYPE;
 		}
 		// Local variable becomes rvalue when returning

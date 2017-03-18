@@ -1,4 +1,6 @@
 #include <cstdio>
+#include <cstring>
+#include <cstdlib>
 #include <utility>
 #include <unistd.h>
 #include <dirent.h>
@@ -61,20 +63,29 @@ namespace shiku::API
 			ret[SHIKUDB_JSON_FIELD_MESSAGE] = "Database not found";
 			return;
 		}
+		// itr->second.~DbfsManager();
 		dbmgr.DBs.erase(itr);
 		// 2nd: Delete files
-		char dbpath[512], filepath[512];
+		char dbpath[512];
 		sprintf(dbpath, "%s%s.db/", dbmgr.root, dbname.c_str());
+		// TODO: Cannot delete normally on windows
+#ifdef __WIN32
+		int len = strlen(dbpath);
+		for(int i = 0; i < len; ++i)
+			if(dbpath[i] == '/')
+				dbpath[i] = '\\';
+		char command[768];
+		sprintf(command, "rmdir /s /q %s", dbpath);
+		Log.Debug("Running command: %s", command);
+		system(command);
+#else
 		DIR *root_dir;
 		dirent *iterator;
+		char filepath[512];
 		root_dir = opendir(dbpath);
 		while((iterator = readdir(root_dir)) != nullptr)
 		{
-#ifdef __WIN32
-			char *fname = iterator->d_name - 4;
-#else
 			char *fname = iterator->d_name;
-#endif
 			if(Utility::IsEndsWith(fname, ".")
 				|| Utility::IsEndsWith(fname, ".."))
 				continue;
@@ -88,6 +99,7 @@ namespace shiku::API
 			ret[SHIKUDB_JSON_FIELD_MESSAGE] = "Fail to delete files";
 			return;
 		}
+#endif
 		Log.Warn("Database %s deleted", dbname.c_str());
 		ret["ok"] = true;
 	}
