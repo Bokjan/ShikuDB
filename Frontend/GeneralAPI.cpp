@@ -46,6 +46,8 @@ namespace shiku
 		// Set `ok` to true if queried DB exists
 		if(dbmgr.DBs.find(query["database"]) != dbmgr.DBs.end())
 			ret["ok"] = true;
+		else
+			ret["message"] = "Database not found";
 	}
 	void InvalidOperation(Json &query, Json &ret)
 	{

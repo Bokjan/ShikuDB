@@ -1,34 +1,49 @@
 require 'json'
 require 'net/http'
-Net::HTTP.version_1_2
 class Shiku
 	public
 	def initialize(h = '127.0.0.1', p = 6207)
-		@host, @port, @url = h, p, "http://#{h}:#{p}/"
+		@host, @port = h, p
 		@db, @collection = '', ''
 	end
 	def test
 		
 	end
-	def db
-		@db.empty? ? 'nil' : @db
-	end
-	def collection
-		@collection.empty? ? 'nil' : @collection
-	end
 	def method_missing(method, *arguments, &block)
 	
 	end
 	def connect
-		post([{'operation' => 'ConnectionTest'}].to_json)
+		ret = http_post({'operation' => 'ConnectionTest'})
+		return true if ret['ok']
+		ret['message']
+	end
+	def show_databases
+		ret = http_post({'operation' => 'ShowDatabases'})
+		return ret['databases'] if ret['ok']
+		ret['message']
+	end
+	def use_database(db)
+		ret = http_post({
+			'operation' => 'UseDatabase',
+			'database' => db
+		})
+		if ret['ok']
+			@database = db
+			return true
+		end
+		ret['message']
 	end
 	private
-	def post(body)
-		req = NET::HTTP::Post.(@url, {'Content-Type' => 'application/json'})
-		req.body = data
-		res = NET::HTTP.start(@host, @port) {|http|
-			return http.post('/', body).body
-		}
-	end
+	def http_post(body)
+		begin
+			Net::HTTP.version_1_2
+			Net::HTTP.start(@host, @port) {|http|
+				# puts body.to_json
+				response = http.post('/', body.to_json)
+				return JSON.parse(response.body)
+			}
+		rescue Exception
+			return {'ok' => 'false', 'message' => 'HTTP Error'}
+		end
 	end
 end
