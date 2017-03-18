@@ -8,5 +8,6 @@
 #define SHIKUDB_ERROR_MESSAGE_OPERATION_NOT_PROVIDED "Operation not provided"
 #define SHIKUDB_ERROR_MESSAGE_INVALID_TYPE "Invalid type of query JSON"
 #define SHIKUDB_ERROR_MESSAGE_INVALID_OPERATION "Invalid operation string received"
+#define SHIKUDB_ERROR_MESSAGE_REQUIRED_FIELD_NOT_PROVIDED "Required field not provided"
 
 #endif //SHIKU_LANG_EN_US_HPP_

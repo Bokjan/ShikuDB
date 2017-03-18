@@ -1,27 +1,26 @@
-// #include <vector>
-// #include <string>
-#include <cstring>
+#include <map>
 #include "Utility.hpp"
 #include "ShikuDB.hpp"
 #include "Literals.hpp"
 #include "ClientAPI.hpp"
 using std::string;
 extern shiku::ShikuDB dbmgr;
-namespace shiku
+namespace shiku::API
 {
-	static inline bool CompareTwoStrings(const char *a, const char *b)
-	{
-		return strcmp(a, b) == 0;
-	}
 	std::function<void(Json&, Json&)> GetApiFuncByString(const char *str)
 	{
-		if(CompareTwoStrings(str, "ConnectionTest"))
-			return ConnectionTest;
-		if(CompareTwoStrings(str, "ShowDatabases"))
-			return ShowDatabases;
-		if(CompareTwoStrings(str, "UseDatabase"))
-			return UseDatabase;
-		return InvalidOperation;
+		static std::map<string, std::function<void(Json&, Json&)>> map = 
+		{
+			{"ConnectionTest", ConnectionTest},
+			{"ShowDatabases", ShowDatabases},
+			{"UseDatabase", UseDatabase},
+			{"CreateDatabase", CreateDatabase},
+			{"DropDatabase", DropDatabase}
+		};
+		auto ret = map.find(str);
+		if(ret == map.end())
+			return InvalidOperation;
+		return ret->second;
 	}
 	void ConnectionTest(Json &query, Json &ret)
 	{
@@ -40,14 +39,14 @@ namespace shiku
 	{
 		if(query.find("database") == query.end())
 		{
-			ret[SHIKUDB_JSON_FIELD_MESSAGE] = "Database name not provided";
+			ret[SHIKUDB_JSON_FIELD_MESSAGE] = SHIKUDB_ERROR_MESSAGE_REQUIRED_FIELD_NOT_PROVIDED;
 			return;
 		}
 		// Set `ok` to true if queried DB exists
 		if(dbmgr.DBs.find(query["database"]) != dbmgr.DBs.end())
 			ret["ok"] = true;
 		else
-			ret["message"] = "Database not found";
+			ret[SHIKUDB_JSON_FIELD_MESSAGE] = "Database not found";
 	}
 	void InvalidOperation(Json &query, Json &ret)
 	{

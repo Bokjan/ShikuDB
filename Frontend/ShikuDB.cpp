@@ -79,7 +79,7 @@ namespace shiku
 		try
 		{
 			const string op = input["operation"];
-			std::function<void(Json&, Json&)> handler = GetApiFuncByString(op.c_str());
+			std::function<void(Json&, Json&)> handler = API::GetApiFuncByString(op.c_str());
 			handler(input, output);
 		}
 		catch(std::domain_error derr)

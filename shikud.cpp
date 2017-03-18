@@ -46,9 +46,9 @@ void ParseArgs(int argc, char *argv[])
 					Log.Fatal("Cannot open config file");
 					throw std::runtime_error("Cannot open config file");
 				}
-				std::ifstream in(argv[i]);
 				try
 				{
+					std::ifstream in(argv[i]);
 					in >> config;
 					in.close();
 				}

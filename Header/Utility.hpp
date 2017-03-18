@@ -8,6 +8,7 @@ namespace Utility
 	bool IsFileExists(const char *file);
 	bool IsFileWriteable(const char *file);
 	bool IsEndsWith(const char *str, const char *suffix);
+	bool MakeDirectory(const char *path);
 }
 class LogClass
 {

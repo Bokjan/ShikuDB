@@ -21,7 +21,7 @@ else:
 if Platform == 'Windows':
 	FilesToCompile = FilesToCompile + ['Dependency/mman.c']
 Env.Append(CFLAGS = ['-g', '-O2'])
-Env.Append(CXXFLAGS = ['-g', '-Wall', '-O2', '-IHeader', '-IDependency', '-std=c++14'])
+Env.Append(CXXFLAGS = ['-g', '-Wall', '-O2', '-IHeader', '-IDependency', '-std=c++1z'])
 Env.Append(LINKFLAGS = ['-g', '-O2'])
 
 for item in IncludedDirectories:

@@ -3,12 +3,14 @@
 #include "Json.hpp"
 #include <functional>
 using Json = nlohmann::json;
-namespace shiku
+namespace shiku::API
 {
 	std::function<void(Json&, Json&)> GetApiFuncByString(const char *str);
 	void ConnectionTest(Json &query, Json &ret);
 	void ShowDatabases(Json &query, Json &ret);
 	void UseDatabase(Json &query, Json &ret);
+	void CreateDatabase(Json &query, Json &ret);
+	void DropDatabase(Json &query, Json &ret);
 	void InvalidOperation(Json &query, Json &ret);
 }
 #endif // SHIKU_CLIENT_API_HPP_

@@ -10,8 +10,6 @@ namespace shiku
 {
 	using string = std::string;
 	using Json = nlohmann::json;
-	// string ShikuDB(string query);
-	// string ShikuDB(const char *query);
 	// A singleton class
 	class ShikuDB
 	{

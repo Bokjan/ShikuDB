@@ -19,11 +19,11 @@ namespace shiku
 			Log.Fatal("Fail to write %s", buff);
 			throw std::runtime_error("Fail to write metadata file");
 		}
-		for(int i = 0; i < (int)(0x1 << 24 / onemb); ++i)
+		for(int i = 0; i < (int)(DbfsManager::BASE_SIZE / onemb); ++i)
 			fwrite(zero, onemb, 1, meta);
 		fclose(meta);
 		delete[] zero;
-		Log.Info("New file %s created, size: %u", buff, 0x1 << 24);
+		Log.Info("New file %s created, size: %u", buff, DbfsManager::BASE_SIZE);
 		// Initialize a `DbfsManager`
 		DiskLoc dl;
 		DbfsManager mgr(name, root);

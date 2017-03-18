@@ -15,12 +15,12 @@ class Shiku
 	def connect
 		ret = http_post({'operation' => 'ConnectionTest'})
 		return true if ret['ok']
-		ret['message']
+		ret
 	end
 	def show_databases
 		ret = http_post({'operation' => 'ShowDatabases'})
 		return ret['databases'] if ret['ok']
-		ret['message']
+		ret
 	end
 	def use_database(db)
 		ret = http_post({
@@ -31,7 +31,23 @@ class Shiku
 			@database = db
 			return true
 		end
-		ret['message']
+		ret
+	end
+	def create_database(db)
+		ret = http_post({
+			'operation' => 'CreateDatabase',
+			'database' => db
+		})
+		return true if ret['ok']
+		ret
+	end
+	def drop_database(db)
+		ret = http_post({
+			'operation' => 'DropDatabase',
+			'database' => db
+		})
+		return true if ret['ok']
+		ret
 	end
 	private
 	def http_post(body)

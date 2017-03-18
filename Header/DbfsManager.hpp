@@ -64,11 +64,11 @@ namespace shiku
 		const static int MAX_META_SIZE = 100000; // Accurately: 104857.6
 		const static size_t NAME_LENGTH = 128;
 		const static size_t FILE_PER_DB = 32768;
-		const static size_t BASE_SIZE = 16777216; // 16MiB
 		char DBName[NAME_LENGTH];
 		char RootPath[NAME_LENGTH];
 		char TmpBuff[NAME_LENGTH * 8];
 	public:
+		const static size_t BASE_SIZE = 16777216; // 16MiB
 		int *fd, _fd[FILE_PER_DB]; // Array of file descriptors
 		void **mem, *_mem[FILE_PER_DB]; // Array of start of memory addrs
 		int32_t *DataFileCount; // Amount of data files
