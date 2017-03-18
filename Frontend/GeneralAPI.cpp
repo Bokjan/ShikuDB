@@ -15,11 +15,17 @@ namespace shiku
 	}
 	std::function<void(Json&, Json&)> GetApiFuncByString(const char *str)
 	{
+		if(CompareTwoStrings(str, "ConnectionTest"))
+			return ConnectionTest;
 		if(CompareTwoStrings(str, "ShowDatabases"))
 			return ShowDatabases;
 		if(CompareTwoStrings(str, "UseDatabase"))
 			return UseDatabase;
 		return InvalidOperation;
+	}
+	void ConnectionTest(Json &query, Json &ret)
+	{
+		ret["ok"] = true;
 	}
 	void ShowDatabases(Json &query, Json &ret)
 	{
