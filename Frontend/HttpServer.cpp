@@ -62,7 +62,8 @@ namespace shiku
 				// Move semantics:
 				// Call `string`'s constructor with rvalue reference
 				// when receiving an rvalue returns by `ShikuDB`
-				string result = dbmgr.RunQuery(hm->body.p);
+				string query(hm->body.p, hm->body.len); // Duplicate the query string to avoid no terminator
+				string result = dbmgr.RunQuery(query.c_str());
 				mg_send_head(c, 200, result.size(), HTTPD_EXTRA_HEADERS);
 				mg_printf(c, "%s", result.c_str());
 				// Pop and Unlock 

@@ -59,7 +59,7 @@ class Shiku
 				return JSON.parse(response.body)
 			}
 		rescue Exception
-			return {'ok' => 'false', 'message' => 'HTTP Error'}
+			return {'ok' => false, 'message' => 'HTTP Error'}
 		end
 	end
 end
