@@ -14,10 +14,10 @@ IncludedDirectories = ['Frontend', 'Storage', 'Utility']
 def IncludeDirectory(directory, filetype):
 	return Env.Glob(ROOT + directory + '/' + filetype)
 
-if Platform == 'Darwin':
-	Env.Replace(CC = 'clang', CXX = 'clang++')
-else:
-	Env.Replace(CC = 'gcc', CXX = 'g++')
+# if Platform == 'Darwin':
+# 	Env.Replace(CC = 'clang', CXX = 'clang++')
+# else:
+# 	Env.Replace(CC = 'gcc', CXX = 'g++')
 if Platform == 'Windows':
 	FilesToCompile = FilesToCompile + ['Dependency/mman.c']
 Env.Append(CFLAGS = ['-g', '-O2'])

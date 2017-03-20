@@ -100,7 +100,7 @@ namespace shiku
 			Log.Fatal("Fail to create %s", TmpBuff);
 			throw std::runtime_error("Fail to create new data file");
 		}
-		Log.Info("Creating new data file %s", TmpBuff);
+		Log.Debug("Creating new data file %s", TmpBuff);
 		const size_t onemb = 0x1 << 20; // 1 MiB
 		// `DataFileCount` refers to the index of data file here
 		size_t sizeOfFile = SizeOfDatafile(*DataFileCount);

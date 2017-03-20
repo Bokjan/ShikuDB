@@ -9,7 +9,7 @@ namespace shiku::API
 {
 	std::function<void(Json&, Json&)> GetApiFuncByString(const char *str)
 	{
-		static std::map<string, std::function<void(Json&, Json&)>> map = 
+		static const std::map<string, std::function<void(Json&, Json&)>> map = 
 		{
 			{"ConnectionTest", ConnectionTest},
 			{"ShowDatabases", ShowDatabases},
