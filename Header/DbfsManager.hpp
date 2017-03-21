@@ -85,13 +85,23 @@ namespace shiku
 		DbfsManager(const char *_DBName, const char *_RootPath);
 		~DbfsManager(void);
 		void CreateNewDatafile(void);
+		inline void* GetAddrFromDl(const DiskLoc &dl)
+		{
+			return (byte*)mem[dl.file] + dl.offset;
+		}
+		inline void* GetAddrFromDl_Safe(const DiskLoc &dl)
+		{
+			if(dl.file == DiskLoc::NullLoc)
+				return nullptr;
+			return (byte*)mem[dl.file] + dl.offset;
+		}
 	};
-	inline void *GetAddrFromDl(const DbfsManager &mgr, const DiskLoc &dl)
+	inline void* GetAddrFromDl(const DbfsManager &mgr, const DiskLoc &dl)
 	{
 		using byte = char;
 		return (byte*)mgr.mem[dl.file] + dl.offset;
 	}
-	inline void *GetAddrFromDl_Safe(const DbfsManager &mgr, const DiskLoc &dl)
+	inline void* GetAddrFromDl_Safe(const DbfsManager &mgr, const DiskLoc &dl)
 	{
 		using byte = char;
 		if(dl.file == DiskLoc::NullLoc)
