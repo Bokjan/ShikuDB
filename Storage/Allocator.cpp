@@ -12,8 +12,26 @@ namespace shiku
 	}
 	DiskLoc Allocator::MALLOC(DbfsManager &mgr, size_t size)
 	{
-		// Space reusing is not supported now
 		DiskLoc ret;
+		// Linear traverse the freelist
+		Record *p = (Record*)mgr.GetAddrFromDl(*mgr.freelist);
+		while(!p->self.IsNullLoc())
+		{
+			// Ignoring `Record` properties (32 Bytes)
+			if(p->length >= size)
+			{
+				// Delete itself from freelist
+				if(!p->prev.IsNullLoc())
+					((Record*)mgr.GetAddrFromDl(p->prev))->next = p->next;
+				if(!p->next.IsNullLoc())
+					((Record*)mgr.GetAddrFromDl(p->next))->prev = p->prev;
+				// Update `mgr.freelist`
+				if(p->self == *mgr.freelist)
+					*mgr.freelist = p->next;
+				return p->self;
+			}
+			p = (Record*)mgr.GetAddrFromDl(p->next);
+		}
 		// Create a new data file or not?
 		if(mgr.lastAvail->offset + size > SizeOfDatafile(mgr.lastAvail->file))
 		{

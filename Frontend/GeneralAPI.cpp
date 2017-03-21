@@ -15,7 +15,9 @@ namespace shiku::API
 			{"ShowDatabases", ShowDatabases},
 			{"UseDatabase", UseDatabase},
 			{"CreateDatabase", CreateDatabase},
-			{"DropDatabase", DropDatabase}
+			{"DropDatabase", DropDatabase},
+			{"CreateCollection", CreateCollection},
+			{"ShowCollections", ShowCollections}
 		};
 		auto ret = map.find(str);
 		if(ret == map.end())

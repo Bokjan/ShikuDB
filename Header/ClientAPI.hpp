@@ -12,5 +12,7 @@ namespace shiku::API
 	void CreateDatabase(Json &query, Json &ret);
 	void DropDatabase(Json &query, Json &ret);
 	void InvalidOperation(Json &query, Json &ret);
+	void CreateCollection(Json &query, Json &ret);
+	void ShowCollections(Json &query, Json &ret);
 }
 #endif // SHIKU_CLIENT_API_HPP_

@@ -37,13 +37,5 @@ namespace shiku
 		void PrintTime(void);
 	};
 	extern LogClass Log;
-	class RBTree_Freelist
-	{
-	public:
-		RBTree_Freelist(void);
-		~RBTree_Freelist(void);
-		void Insert(int x);
-		bool DeleteValue(int x);
-	};
 }
 #endif //SHIKU_UTILITY_HPP_

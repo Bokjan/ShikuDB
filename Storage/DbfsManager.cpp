@@ -116,4 +116,8 @@ namespace shiku
 		delete[] zero;
 		Log.Info("New data file %s created, size: %lu", TmpBuff, sizeOfFile);
 	}
+	bool operator == (const DiskLoc &a, const DiskLoc &b)
+	{
+		return a.file == b.file && a.offset == b.offset;
+	}
 }

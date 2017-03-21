@@ -22,7 +22,11 @@ namespace shiku
 		// Read directory
 		DIR *root_dir;
 		dirent *iterator;
-		root_dir = opendir(root);
+		if((root_dir = opendir(root)) == nullptr)
+		{
+			Log.Fatal("Cannot access root path %s", root);
+			throw std::runtime_error("Cannot access root path");
+		}
 		while((iterator = readdir(root_dir)) != nullptr)
 		{
 			// Strange problem.

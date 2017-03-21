@@ -26,7 +26,12 @@ namespace shiku
 		int32_t offset;
 		DiskLoc(void): 
 			file(NullLoc), offset(NullLoc) { }
+		bool IsNullLoc(void)
+		{
+			return file == NullLoc;
+		}
 	};
+	bool operator == (const DiskLoc &a, const DiskLoc &b);
 	struct Metadata // sizeof(Metadata) == 160
 	{
 		using byte = char;
@@ -73,10 +78,10 @@ namespace shiku
 		void **mem, *_mem[FILE_PER_DB]; // Array of start of memory addrs
 		int32_t *DataFileCount; // Amount of data files
 		Metadata *metas; // Total metas: 16MiB / 152B ~ 110000
-		DiskLoc *freelist; // First elem of FREELIST
-		DiskLoc *lastAvail; // `MALLOC` at here (if no free node in freelist)
 		int32_t *MetadataCount; // Num of metadatas
 		std::map<string, Metadata*> Metamap; // Metadata map
+		DiskLoc *freelist; // First elem of FREELIST
+		DiskLoc *lastAvail; // `MALLOC` at here (if no free node in freelist)
 		using byte = char;
 		DbfsManager(void)
 		{

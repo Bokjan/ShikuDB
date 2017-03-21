@@ -49,6 +49,23 @@ class Shiku
 		return true if ret['ok']
 		ret
 	end
+	def create_collection(col)
+		ret = http_post({
+			'operation' => 'CreateCollection',
+			'database' => @database,
+			'collection' => col
+		})
+		return true if ret['ok']
+		ret
+	end
+	def show_collections
+		ret = http_post({
+			'operation' => 'ShowCollections',
+			'database' => @database
+		})
+		return ret['collections'] if ret['ok']
+		ret
+	end
 	private
 	def http_post(body)
 		begin

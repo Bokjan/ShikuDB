@@ -103,4 +103,53 @@ namespace shiku::API
 		Log.Warn("Database %s deleted", dbname.c_str());
 		ret["ok"] = true;
 	}
+	void CreateCollection(Json &query, Json &ret)
+	{
+		if(query.find("database") == query.end() || 
+			query.find("collection") == query.end())
+		{
+			ret[SHIKUDB_JSON_FIELD_MESSAGE] = SHIKUDB_ERROR_MESSAGE_REQUIRED_FIELD_NOT_PROVIDED;
+			return;
+		}
+		string database = query["database"];
+		string collection = query["collection"];
+		if(dbmgr.DBs.find(database) == dbmgr.DBs.end())
+		{
+			ret[SHIKUDB_JSON_FIELD_MESSAGE] = "Database not found";
+			return;
+		}
+		if(dbmgr.DBs.find(collection) != dbmgr.DBs.end())
+		{
+			ret[SHIKUDB_JSON_FIELD_MESSAGE] = "Duplicated collection name";
+			return;
+		}
+		// Create new meta
+		DbfsManager &mgr = dbmgr.DBs[database];
+		strcpy(mgr.metas[*mgr.MetadataCount].Name, collection.c_str());
+		mgr.metas[*mgr.MetadataCount].FirstRecord = DiskLoc();
+		// Map it
+		mgr.Metamap.insert(std::make_pair(collection, mgr.metas + *mgr.MetadataCount));
+		*mgr.MetadataCount += 1;
+		ret["ok"] = true;
+	}
+	void ShowCollections(Json &query, Json &ret)
+	{
+		if(query.find("database") == query.end())
+		{
+			ret[SHIKUDB_JSON_FIELD_MESSAGE] = SHIKUDB_ERROR_MESSAGE_REQUIRED_FIELD_NOT_PROVIDED;
+			return;
+		}
+		string database = query["database"];
+		if(dbmgr.DBs.find(database) == dbmgr.DBs.end())
+		{
+			ret[SHIKUDB_JSON_FIELD_MESSAGE] = "Database not found";
+			return;
+		}
+		DbfsManager &mgr = dbmgr.DBs[database];
+		ret["collections"] = Json::array();
+		for(auto &i : mgr.Metamap)
+			if(i.first[0] != '$')
+				ret["collections"].push_back(i.first);
+		ret["ok"] = true;
+	}
 }
