@@ -82,7 +82,12 @@ namespace shiku::API
 		DIR *root_dir;
 		dirent *iterator;
 		char filepath[512];
-		root_dir = opendir(dbpath);
+		if((root_dir = opendir(dbpath)) == nullptr)
+		{
+			Log.Warn("Cannot access %s when deleting %s", dbpath, dbname.c_str());
+			ret[SHIKUDB_JSON_FIELD_MESSAGE] = "Fail to delete files";
+			return;
+		}
 		while((iterator = readdir(root_dir)) != nullptr)
 		{
 			char *fname = iterator->d_name;

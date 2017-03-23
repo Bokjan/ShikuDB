@@ -26,6 +26,11 @@ namespace shiku
 		int32_t offset;
 		DiskLoc(void): 
 			file(NullLoc), offset(NullLoc) { }
+		void Assign(int32_t f, int32_t o)
+		{
+			file = f;
+			offset = o;
+		}
 		bool IsNullLoc(void)
 		{
 			return file == NullLoc;

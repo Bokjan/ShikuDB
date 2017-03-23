@@ -12,13 +12,14 @@ namespace shiku
 	}
 	DiskLoc Allocator::MALLOC(DbfsManager &mgr, size_t size)
 	{
+		using byte = char;
 		DiskLoc ret;
 		// Linear traverse the freelist
 		Record *p = (Record*)mgr.GetAddrFromDl(*mgr.freelist);
 		while(!p->self.IsNullLoc())
 		{
-			// Ignoring `Record` properties (32 Bytes)
-			if(p->length >= size)
+			// There're `Record` properties (32 Bytes)
+			if(p->length + sizeof(Record) >= size)
 			{
 				// Delete itself from freelist
 				if(!p->prev.IsNullLoc())
@@ -28,6 +29,13 @@ namespace shiku
 				// Update `mgr.freelist`
 				if(p->self == *mgr.freelist)
 					*mgr.freelist = p->next;
+				if(p->length > size + 128) // Assume that 128 Bytes is the minimum size to realloc
+				{
+					Record *newrec = (Record*)((byte*)p + sizeof(Record) + size); // 32 == sizeof(Record)
+					newrec->self.Assign(p->self.file, p->self.offset + sizeof(Record) + size);
+					newrec->length = p->length - sizeof(Record) - size;
+					FREE(mgr, *newrec);
+				}
 				return p->self;
 			}
 			p = (Record*)mgr.GetAddrFromDl(p->next);

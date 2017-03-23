@@ -1,6 +1,7 @@
 #ifndef SHIKU_UTILITY_HPP_
 #define SHIKU_UTILITY_HPP_
 #include <cstdio>
+#include "Json.hpp"
 namespace shiku::Utility
 {
 	bool IsFileExists(const char *file);
@@ -8,6 +9,21 @@ namespace shiku::Utility
 	bool IsEndsWith(const char *str, const char *suffix);
 	bool MakeDirectory(const char *path);
 	bool DeleteFile(const char *path);
+	void SerializeNson(const nlohmann::json &json, void *pointer);
+	nlohmann::json UnserializeNson(const void *pointer);
+	enum class NsonType : uint8_t // Explanation -> `NsonDriver.cpp`
+	{
+		Document = 0,
+		Array,
+		Null,
+		Boolean,
+		BooleanTrue,
+		BooleanFalse,
+		Integer,
+		UnsignedInteger,
+		Float,
+		String
+	};
 }
 namespace shiku
 {
