@@ -72,8 +72,11 @@ namespace shiku
 		metas = (Metadata*)((byte*)mem[META_OFFSET] + META_LAYOUT::META_START_AT);
 		// Initialize meta map
 		MetadataCount = (int32_t*)((byte*)mem[META_OFFSET] + META_LAYOUT::METADATA_COUNT_AT);
-		for(int i = 0; i < *MetadataCount; ++i)
-			Metamap.insert(std::make_pair(metas[i].Name, &metas[i]));
+		// for(int i = 0; i < *MetadataCount; ++i)
+		// 	Metamap.insert(std::make_pair(metas[i].Name, &metas[i]));
+		for(int i = 0, count = 0; i < MAX_META_SIZE || count < *MetadataCount; ++i)
+			if(metas[i].Name[0] != '\0')
+				Metamap.insert(std::make_pair(metas[i].Name, &metas[i])), ++count;
 		// Initialize the freelist
 		// and the last available `DiskLoc` position
 		freelist = (DiskLoc*)((byte*)mem[META_OFFSET] + META_LAYOUT::FREELIST_START_AT);

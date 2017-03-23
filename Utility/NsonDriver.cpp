@@ -6,17 +6,16 @@
 using std::string;
 using byte = char;
 using Json = nlohmann::json;
-using shiku::Log;
 /*
-	0 Document - (length + doc) - ([uint32_t]32B + n B)
-	1 Array - (length + type + arr) - ([uint32_t]32B + [uint8_t]8B + n B)
+	0 Document - (length + doc) - ([uint32_t]4B + n B)
+	1 Array - (length + type + arr) - ([uint32_t]4B + [uint8_t]1B + n B)
 	2 Null - nil - 0B
 	3 Boolean - For array, followed by BT or BF
 	4 BooleanTrue - nil - 0B
 	5 BooleanFalse - nil - 0B
-	6 Integer - int64_t - 64B
-	7 UnsignedInteger - uint64_t - 64B
-	8 Float - double - 64B
+	6 Integer - int64_t - 8B
+	7 UnsignedInteger - uint64_t - 8B
+	8 Float - double - 8B
 	9 String - (length + value) - ([uint32_t]32B + n B)
 
 	!!! `NsonType` defined in `Utility.hpp`
@@ -158,7 +157,7 @@ namespace Internal
 		for(it = json.begin(); it != json.end(); ++it)
 		{
 			string handle;
-			// Write value
+			// Extract value
 			switch(it.value().type())
 			{
 				case Json::value_t::object: // NsonType::Document

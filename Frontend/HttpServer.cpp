@@ -15,6 +15,7 @@ namespace shiku
 	HttpServer::HttpServer(int port)
 	{
 		SetPort(port);
+		isShutdown = false;
 		mg_mgr_init(&mgr, NULL);
 		c = mg_bind(&mgr, Port, EventHandler);
 		if(c == NULL)
@@ -28,12 +29,16 @@ namespace shiku
 	HttpServer::~HttpServer(void)
 	{
 		mg_mgr_free(&mgr);
-		Log.Info("Http Server stopped");
+		Log.Info("Http server stopped");
 	}
 	void HttpServer::Run(void)
 	{
-		for( ; ;)
+		for( ; !isShutdown;)
 			mg_mgr_poll(&mgr, 1000);
+	}
+	void HttpServer::Shutdown(void)
+	{
+		isShutdown = true;
 	}
 	void HttpServer::SetPort(int port)
 	{

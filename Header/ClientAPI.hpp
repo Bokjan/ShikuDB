@@ -7,6 +7,7 @@ namespace shiku::API
 {
 	std::function<void(Json&, Json&)> GetApiFuncByString(const char *str);
 	void ConnectionTest(Json &query, Json &ret);
+	void ShutdownServer(Json &query, Json &ret);
 	void ShowDatabases(Json &query, Json &ret);
 	void UseDatabase(Json &query, Json &ret);
 	void CreateDatabase(Json &query, Json &ret);

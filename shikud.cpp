@@ -13,6 +13,7 @@ using Json = nlohmann::json;
 using shiku::Log;
 Json config;
 shiku::ShikuDB dbmgr;
+shiku::HttpServer *hs;
 void ParseArgs(int argc, char *argv[]);
 void InitDB(int, char *[]);
 void InitHttpServer(int, char *[]);
@@ -26,6 +27,7 @@ int main(int argc, char *argv[])
 	for(auto fun : Delegates)
 		fun(argc, argv);
 	Log.Info("Shutting down server");
+	delete hs;
 	return 0;
 }
 void ParseArgs(int argc, char *argv[])
@@ -82,7 +84,6 @@ void InitDB(int argc, char *argv[])
 }
 void InitHttpServer(int argc, char *argv[])
 {
-	shiku::HttpServer *hs;
 	if(config.find("port") != config.end())
 		hs = new shiku::HttpServer((int)config["port"]);
 	else

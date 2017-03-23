@@ -11,3 +11,11 @@ bool shiku::Utility::IsEndsWith(const char *str, const char *suffix)
 			return false;
 	return true;
 }
+uint32_t shiku::Utility::BkdrHash(const char *str)
+{
+	static uint32_t seed = 131;
+	uint32_t hash = 0;
+	while(*str)
+		hash = hash * seed + (*str++);
+	return hash & 0x7FFFFFFF;
+}

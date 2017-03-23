@@ -130,10 +130,14 @@ namespace shiku::API
 		}
 		// Create new meta
 		DbfsManager &mgr = dbmgr.DBs[database];
-		strcpy(mgr.metas[*mgr.MetadataCount].Name, collection.c_str());
-		mgr.metas[*mgr.MetadataCount].FirstRecord = DiskLoc();
+		// Open addressing
+		uint32_t hashpos = Utility::BkdrHash(collection.c_str()) % DbfsManager::MAX_META_SIZE;
+		while(mgr.metas[hashpos].Name[0] != '\0') // This slot is used
+			++hashpos;
+		strcpy(mgr.metas[hashpos].Name, collection.c_str());
+		mgr.metas[hashpos].FirstRecord = DiskLoc();
 		// Map it
-		mgr.Metamap.insert(std::make_pair(collection, mgr.metas + *mgr.MetadataCount));
+		mgr.Metamap.insert(std::make_pair(collection, mgr.metas + hashpos));
 		*mgr.MetadataCount += 1;
 		ret["ok"] = true;
 	}

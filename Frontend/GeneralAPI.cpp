@@ -3,8 +3,10 @@
 #include "ShikuDB.hpp"
 #include "Literals.hpp"
 #include "ClientAPI.hpp"
+#include "HttpServer.hpp"
 using std::string;
 extern shiku::ShikuDB dbmgr;
+extern shiku::HttpServer *hs;
 namespace shiku::API
 {
 	std::function<void(Json&, Json&)> GetApiFuncByString(const char *str)
@@ -12,6 +14,7 @@ namespace shiku::API
 		static const std::map<string, std::function<void(Json&, Json&)>> map = 
 		{
 			{"ConnectionTest", ConnectionTest},
+			{"ShutdownServer", ShutdownServer},
 			{"ShowDatabases", ShowDatabases},
 			{"UseDatabase", UseDatabase},
 			{"CreateDatabase", CreateDatabase},
@@ -27,6 +30,11 @@ namespace shiku::API
 	void ConnectionTest(Json &query, Json &ret)
 	{
 		ret["ok"] = true;
+	}
+	void ShutdownServer(Json &query, Json &ret)
+	{
+		ret["ok"] = true;
+		hs->Shutdown();
 	}
 	void ShowDatabases(Json &query, Json &ret)
 	{

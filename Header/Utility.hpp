@@ -7,6 +7,7 @@ namespace shiku::Utility
 	bool IsFileExists(const char *file);
 	bool IsFileWriteable(const char *file);
 	bool IsEndsWith(const char *str, const char *suffix);
+	uint32_t BkdrHash(const char *str);
 	bool MakeDirectory(const char *path);
 	bool DeleteFile(const char *path);
 	void SerializeNson(const nlohmann::json &json, void *pointer);
