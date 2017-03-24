@@ -1,4 +1,4 @@
-# What is ShikuDB
+# ShikuDB
 Build Status: [![Build Status](https://travis-ci.org/Bokjan/ShikuDB.svg?branch=master)](https://travis-ci.org/Bokjan/ShikuDB) (Travis-CI)
 
 ShikuDB is a naive NoSQL database designed for finishing my C++ course.
@@ -6,9 +6,9 @@ ShikuDB is a naive NoSQL database designed for finishing my C++ course.
 `shiku` can either be pronouced as シク(詩句, poem) or xīkù(奚库, big-belly database).
 
 # Environment
-I use OS X 10.11.
+I use OS X 10.11. Excluding Travis-CI, physical machines used to test: Fedora 25(amd64/ARMv7), Windows 7(x64).
 
-ShikuDB currently runs well on Windows 7/8/10, Fedora 25, OS X 10.11. 
+ShikuDB currently runs well on Fedora 25, OS X 10.11, and is partly compatible with Windows. There're some [known bugs](https://github.com/Bokjan/ShikuDB/issues/3).
 
 # Driver usage
 - Ruby

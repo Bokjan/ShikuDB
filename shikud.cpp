@@ -59,6 +59,7 @@ void ParseArgs(int argc, char *argv[])
 					Log.Warn("Configuration JSON parse failed");
 					// throw std::runtime_error("Configuration parse failed");
 				}
+				config["root"] += '/';
 				break;
 			}
 			case 'p': // Port

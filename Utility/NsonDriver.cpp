@@ -16,22 +16,24 @@ using Json = nlohmann::json;
 	6 Integer - int64_t - 8B
 	7 UnsignedInteger - uint64_t - 8B
 	8 Float - double - 8B
-	9 String - (length + value) - ([uint32_t]32B + n B)
-
-	!!! `NsonType` defined in `Utility.hpp`
+	9 String - (length + value) - ([uint32_t]4B + n B)
+	10 KeyString - (length + value) - ([uint8_t]1B + n B)
+	!!! `NsonType` defined in `Utility.hpp` !!!
 */
 namespace Internal
 {
 	using shiku::Utility::NsonType;
 	static void WriteString(string &str, byte *&p);
 	static string FetchString(const byte *&p);
+	static void WriteKeyString(string &str, byte *&p);
+	static string FetchKeyString(const byte *&p);
 	static void SerializeDocument(const Json &json, byte *&p);
 	static void SerializeArray(const Json &json, byte *&p);
 	static Json UnserializeDocument(const byte *&pointer);
 	static Json UnserializeArray(const byte *&pointer);
 	static void WriteString(string &str, byte *&p)
 	{
-		// String - (length + value) - ([uint32_t]32B + n B)
+		// String - (length + value) - ([uint32_t]41B + n B)
 		uint32_t *str_length = (uint32_t*)p;
 		*str_length = str.length();
 		p += sizeof(uint32_t);
@@ -46,6 +48,23 @@ namespace Internal
 		p += length;
 		return ret;
 	}
+	static void WriteKeyString(string &str, byte *&p)
+	{
+		// String - (length + value) - ([uint8_t]1B + n B)
+		uint8_t *str_length = (uint8_t*)p;
+		*str_length = str.length();
+		p += sizeof(uint8_t);
+		strcpy(p, str.c_str());
+		p += *str_length;
+	}
+	static string FetchKeyString(const byte *&p)
+	{
+		uint8_t length = *((uint8_t*)p);
+		p += sizeof(uint8_t);
+		string ret = string(p, length);
+		p += length;
+		return ret;
+	}
 	static void SerializeDocument(const Json &json, byte *&p)
 	{
 		uint32_t *doc_length = (uint32_t*)p;
@@ -56,7 +75,7 @@ namespace Internal
 			string handle;
 			// Write key (String)
 			handle = it.key();
-			WriteString(handle, p);
+			WriteKeyString(handle, p);
 			// Write value
 			switch(it.value().type())
 			{
@@ -112,7 +131,7 @@ namespace Internal
 	}
 	static void SerializeArray(const Json &json, byte *&p)
 	{
-		// Array - (length + type + doc) - ([uint32_t]32B + [uint8_t]8B + n B)
+		// Array - (length + type + doc) - ([uint32_t]4B + [uint8_t]1B + n B)
 		uint32_t *arr_length = (uint32_t*)p;
 		p += sizeof(uint32_t);
 		NsonType *elem_type = (NsonType*)p;
@@ -208,7 +227,7 @@ namespace Internal
 		while(p < start + doc_length)
 		{
 			// Fetch key
-			string key = FetchString(p);
+			string key = FetchKeyString(p);
 			NsonType value_type = *((NsonType*)p);
 			p += sizeof(NsonType);
 			switch(value_type)

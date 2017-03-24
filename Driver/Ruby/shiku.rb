@@ -17,7 +17,7 @@ class Shiku
 		return true if ret['ok']
 		ret
 	end
-	def connect
+	def shutdown_server
 		ret = http_post({'operation' => 'ShutdownServer'})
 		return true if ret['ok']
 		ret
