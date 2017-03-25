@@ -1,4 +1,0 @@
-#ifndef SHIKU_LANG_ZH_CN_HPP_
-#define SHIKU_LANG_ZH_CN_HPP_
-
-#endif //SHIKU_LANG_ZH_CN_HPP_
