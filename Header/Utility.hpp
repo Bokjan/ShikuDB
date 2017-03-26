@@ -2,6 +2,7 @@
 #define SHIKU_UTILITY_HPP_
 #include <cstdio>
 #include "Json.hpp"
+#include "DbfsManager.hpp"
 namespace shiku::Utility
 {
 	bool IsFileExists(const char *file);

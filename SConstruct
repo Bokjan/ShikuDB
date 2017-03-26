@@ -16,8 +16,8 @@ def IncludeDirectory(directory, filetype):
 
 if Platform == 'Darwin':
 	Env.Replace(CC = 'clang', CXX = 'clang++')
-else:
-	Env.Replace(CC = 'gcc', CXX = 'g++')
+# else:
+# 	Env.Replace(CC = 'gcc', CXX = 'g++')
 if Platform == 'Windows':
 	FilesToCompile = FilesToCompile + ['Dependency/mman.c']
 Env.Append(CFLAGS = ['-g', '-O2'])

@@ -15,7 +15,7 @@
 #include <cstring>
 #include <cstdint>
 #include <stdexcept>
-using string = std::string;
+using std::string;
 namespace shiku
 {
 	struct DiskLoc // sizeof(DiskLoc) == 8
@@ -34,6 +34,10 @@ namespace shiku
 		bool IsNullLoc(void)
 		{
 			return file == NullLoc;
+		}
+		static inline DiskLoc GenNullLoc(void)
+		{
+			return DiskLoc();
 		}
 	};
 	bool operator == (const DiskLoc &a, const DiskLoc &b);

@@ -22,7 +22,7 @@ ShikuDB currently runs well on Fedora 25, OS X 10.11, and is partly compatible w
 	- [cesanta/mongoose](https://github.com/cesanta/mongoose)
 	- [witwall/mman-win32](https://github.com/witwall/mman-win32)
 - Not included in this repo
-	- *null*
+	- [Boost C++ Libraries](http://www.boost.org)
 
 # Build Instructions
 1. Run following in terminal (use MinGW on Windows):
